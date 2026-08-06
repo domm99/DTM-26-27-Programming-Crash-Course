@@ -49,8 +49,8 @@
 ]
 
 #title-slide(
-  title: "Crash Course on Software Development and Computer Architectures",
-  subtitle: "Digital Transformation Management @ 2024",
+  title: "Crash Course on Programming in Python",
+  subtitle: "Digital Transformation Management @ 2026",
   author: author,
   // date: datetime.today().display("[day] [month repr:long] [year]"),
 )
@@ -60,7 +60,7 @@
 #slide(title: "Who am I?")[
 
   - Bachelor and Master Degree in #alert[Computer Science and Engineering] at University of Bologna
-  - Currently #alert[PhD Student] in Computer Science and Engineering at University of Bologna
+  - Currently #alert[PhD Student] in Computer Science and Engineering at University of Bologna (almost finished)
   - #alert[Teaching tutor] for Software Engineering stuff in the DTM master course
   - If you have any question write me at: `davide.domini@unibo.it`
 
@@ -75,15 +75,17 @@
 ]
 
 #slide(title: "Outline (tentative)")[
-  - #alert[Lesson 01]: Computer Architectures and Operating Systems
-  - #alert[Lesson 02]: Intro to Programming Languages and Sofware Development 
-  - #alert[Lesson 03]: Tools for Sofware Development 
+  - #alert[Lesson 01]: Intro to Computer Architectures, Operating Systems and Programming Languages
+  - #alert[Lesson 02]: Lab 1 on Programming in Python
+  - #alert[Lesson 03]: Lab 2 on Programming in Python
+  - #alert[Lesson 03]: Lab 3 on Programming in Python
 ]
 
 #slide(title: "When and where?")[
-  - Tuesday 24/09, Room 3.10, Time: 9-12
-  - Tuesday 01/10, Room 3.10, Time: 9-12
-  - Tuesday 15/10, Room 3.10, Time: 9-12
+  - Friday 02/10, Room 2.13, Time: 11-14
+  - Friday 02/10, Room 3.3, Time: 15-18
+  - Wednesday 07/10, Room 3.1, Time: 16-18
+  - Wednesday 14/10, Room 3.1, Time: 16-18
 ]
 
 #slide(title: "Where can I find the slides?")[
