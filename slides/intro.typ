@@ -88,7 +88,7 @@
   - Wednesday 14/10, Room 3.1, Time: 16-18
 ]
 
-#slide(title: "Where can I find the slides?")[
+#slide(title: "Where can you find the slides?")[
   You can find #alert[all the slides and the code] on #alert[GitHub] (of course we will see what GitHub is, in the meanwhile think of it as one big shared folder).
 
   #figure(image("images/qr.svg", width: 30%))

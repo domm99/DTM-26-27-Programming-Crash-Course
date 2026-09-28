@@ -1,10 +1,5 @@
 #import "@preview/touying:0.6.1": *
 #import themes.metropolis: *
-#import "@preview/fontawesome:0.5.0": *
-#import "@preview/ctheorems:1.1.3": *
-#import "@preview/numbly:0.1.0": numbly
-#import "utils.typ": *
-#import "@preview/tiaoma:0.3.0"
 
 #show: metropolis-theme.with(
   aspect-ratio: "16-9",
@@ -15,704 +10,1733 @@
 #set strong(delta: 200)
 #set par(justify: true)
 
-#set quote(block: true)
-#show quote: set align(left)
-#show quote: set pad(x: 2em, y: -0.8em)
-
 #set raw(tab-size: 4)
 #show raw.where(block: true): block.with(
-  fill: luma(240),
-  inset: 1em,
-  radius: 0.7em,
+  fill: luma(242),
+  inset: 0.85em,
+  radius: 0.5em,
   width: 100%,
 )
 
-#show bibliography: set text(size: 0.8em)
-#show footnote.entry: it => {
-  block(inset: (x: 2em, y: 0.1em))[#text(size: 0.75em)[#it.note.body]]
-}
-
-#let fcite(clabel) = {
-  footnote(cite(form: "full", label(clabel)))
-}
+// Self-contained deck apart from Touying.
+// Image placeholders describe the intended asset and composition.
 
 #let author = block(inset: 0.1em)[
-  #table(inset: 0.5em, stroke: none, columns: (auto, 4fr),  align: (left, left),
+  #table(
+    inset: 0.45em,
+    stroke: none,
+    columns: (auto, 1fr),
+    align: (left, left),
     [#alert[*Davide Domini*]], [`davide.domini@unibo.it`],
   )
-  #place(right, dy:-1.5em)[
-    #figure(image("images/disi.svg", width:40%))
-  ]
 ]
 
-#title-slide(
-  title: "Introduction to Computer Architectures and Operating Systems",
-  subtitle: "Digital Transformation Management @ 2024",
-  author: author,
-  // date: datetime.today().display("[day] [month repr:long] [year]"),
+#let two-col(left, right, ratio: (1fr, 1fr), gutter: 1.2em) = grid(
+  columns: ratio,
+  gutter: gutter,
+  left,
+  right,
 )
 
-#focus-slide[ Hardware and software ]
-
-#slide(title: "A stacked architecture")[
-  #figure(image("images/stack-arc.svg"))
+#let placeholder(desc, height: 7.5em) = block(
+  width: 100%,
+  height: height,
+  fill: luma(239),
+  stroke: luma(180),
+  radius: 0.5em,
+  inset: 0.8em,
+)[
+  #align(center + horizon)[
+    #text(fill: luma(112), size: 0.76em, style: "italic")[IMAGE PLACEHOLDER\
+    #desc]
+  ]
 ]
 
-#slide(title: "Hardware")[
+#let callout(body) = block(
+  width: 100%,
+  fill: rgb("#eef4f7"),
+  stroke: (left: 4pt + rgb("#00838f")),
+  inset: (x: 0.8em, y: 0.55em),
+  radius: 0.35em,
+)[#body]
 
-  - #alert[Hardware]: set of physical devices of a computer
-    - Circuits: motherboard, network cards, ...
-    // - Memories: HDDs, SSDs, cache, ...
-    - Devices: mouse, keyboard, printer, ...
-  - #alert[Rigid] with respect to #alert[changes]
-    - due to, for instance, compatibility or costs
-    - this is an important aspect when you make decisions about the hardware you want to buy
+#let activity(minutes, body) = block(
+  width: 100%,
+  fill: rgb("#fff7df"),
+  stroke: rgb("#e2b94f"),
+  inset: 0.8em,
+  radius: 0.45em,
+)[
+  #text(weight: 600)[Exercise (#minutes)]\
+  #body
+]
+
+#let solution(body) = block(
+  width: 100%,
+  fill: rgb("#eef7ee"),
+  stroke: (left: 4pt + rgb("#4f8a52")),
+  inset: (x: 0.8em, y: 0.55em),
+  radius: 0.35em,
+)[
+  #text(weight: 600)[Solution]\
+  #body
+]
+
+#let source-note(body) = align(right)[
+  #text(size: 0.55em, fill: luma(100))[#body]
+]
+
+#let simple-table(columns, cells) = table(
+  columns: columns,
+  inset: (x: 0.62em, y: 0.4em),
+  stroke: none,
+  fill: (x, y) => if y == 0 { rgb("#dfecef") } else if calc.odd(y) { luma(247) } else { white },
+  ..cells,
+)
+
+// =============================================================================
+// RUN OF SHOW
+// CLASSROOM: 3 hours, including a 10-minute break
+// 00:00-00:25  Why computers and programming matter
+// 00:25-01:35  Hardware and information representation
+// 01:35-01:45  Break
+// 01:45-02:20  Operating systems
+// 02:20-02:55  Algorithms, languages, and translation
+// 02:55-03:00  Bridge to the lab
+//
+// LAB: 3 hours, including a 10-minute break
+// 00:00-00:20  Ways to run Python and first program
+// 00:20-00:55  Values, variables, types, operators, strings
+// 00:55-01:25  Execution flow and conditions
+// 01:25-01:35  Break
+// 01:35-02:05  Loops
+// 02:05-02:30  Collections
+// 02:30-02:40  Functions
+// 02:40-02:58  Final cumulative exercise
+// 02:58-03:00  Recap
+// =============================================================================
+
+#title-slide(
+  title: "From bits to Python",
+  subtitle: "Crash Course on Programming @ Digital Transformation Management 2026-27",
+  author: author,
+)
+
+#focus-slide[Introduction to Computers]
+
+// ----------------------------------------------------------------------------
+// PART 1: INTRODUCTION
+// ----------------------------------------------------------------------------
+
+#focus-slide[Part 1\
+Why Computers and Programming?]
+
+#slide(title: "Why We Use Computers")[
+      Computers are useful when a task requires:
+      - many *repeated* operations
+      - *large amounts* of information
+      - *consistent* application of rules
+      - *simulation* of alternatives
+
+      They trade human effort for a precise procedure that can run at scale.
+]
+
+#slide(title: "A Wartime Turning Point: The Bombe")[
+
+  During *World War II*, decrypting German messages encoded with
+  the *Enigma* machine became a huge computational problem.
+
+  #v(1.5em)
+    #two-col(
+  [
+    #figure(image("/assets/image.png", width: 100%))
+  ],[
+    #figure(image("/assets/image-1.png", width: 100%))
+  ])
+  #v(3.5em)
+
+  - Enigma had an enormous number of possible settings.
+  - Testing them manually would have taken too long.
+  - In 1940, *Alan Turing* and *Gordon Welchman* developed the
+    *Bombe* at Bletchley Park.
+  - The machine repeatedly tested possibilities and eliminated
+    settings that could not be correct.
+
+  #v(0.5em)
+
+  #block(
+    fill: rgb("#f3f3f3"),
+    stroke: 1pt + rgb("#ed7d1a"),
+    inset: 0.8em,
+  )[
+    The Bombe was *not a general-purpose computer*: it was built
+    for one specific task.
+
+    But it demonstrated a central idea of modern computing:
+
+    #align(center)[
+      *turn a problem into precise rules and let a machine execute
+      them quickly and repeatedly.*
+    ]
+  ]
   
-  #components.side-by-side(columns: (1fr, 1fr, 1fr), gutter: 0em)[
-    #figure(image("images/cpu.jpeg", width: 75%))
-  ][
-    #figure(image("images/gpu.jpeg", width: 75%))
-  ][
-    #figure(image("images/motherboard.jpg", width: 75%))
+  #figure(image("images/Bletchley_Park_Bombe4.jpg", width: 75%))
+  #figure(image("images/Wartime_photo_of_Colossus_10.png", width: 75%))  
+]
+
+#slide(title: "Hardware and Software")[
+  #two-col(
+    [
+      *Hardware*
+
+      Physical components that store, process, display, or transmit information.
+
+      Examples: processor, memory, storage device, screen, network interface.
+    ],
+    [
+      *Software*
+
+      Instructions and data that determine what the hardware does.
+
+      Examples: operating system, browser, spreadsheet, mobile app, Python script.
+    ],
+  )
+
+  #v(0.6em)
+  The same hardware can perform very different tasks when it runs different software.
+]
+
+#slide(title: "Programming")[
+  Programming means describing a procedure precisely enough that a computer can carry it out.
+
+  #v(0.6em)
+  A program can:
+  - transform input data into an output
+  - automate a repeated workflow
+  - make decisions from explicit rules
+  - coordinate other programs and devices
+  - simulate how a system might behave
+
+  #callout[The computer provides speed and consistency. The programmer provides the model, rules, and meaning.]
+]
+
+#slide(title: "Computational Thinking")[
+  Computational thinking helps us turn an informal goal into a procedure that someone else, or a computer, can follow.
+
+  - *Decomposition:* divide the problem into manageable parts
+  - *Pattern recognition:* identify repeated cases and shared structure
+  - *Abstraction:* keep relevant details and hide the rest
+  - *Algorithm design:* define ordered and unambiguous steps
+  - *Evaluation:* test the result and revise incorrect assumptions
+]
+
+#slide(title: "A nice quote from: Robert C. Martin (a.k.a. Uncle Bob)")[
+  #quote[
+    #emph[
+    At some point you touched a computer, 
+    and the computer did what you wanted.
+    You made it do what you wanted it to do and you realized that you were a god. 
+    A small god in a very small world.
+    But inside that world you were a god.
+  ]]
+]
+
+// ----------------------------------------------------------------------------
+// PART 2: HARDWARE
+// ----------------------------------------------------------------------------
+
+#focus-slide[Part 2\
+Hardware and Information]
+
+#slide(title: "A Computer Seen From the Outside")[
+  #placeholder("input, processing, output, and storage around a laptop, including keyboard, file, network, screen, and saved file", height: 8em)
+
+  - *Input* brings information into the system
+  - *Processing* transforms the information according to instructions
+  - *Output* communicates the result
+  - *Storage* preserves information for later use
+
+  This simple model works for a laptop, a server, a smartphone, or an embedded controller.
+]
+
+#slide(title: "Layers of a Computer System")[
+  #placeholder("vertical stack with electronics, hardware components, operating system, language runtime, application, and user", height: 9em)
+
+  Each layer exposes a simpler interface and hides details below it. These abstractions let us build applications without controlling individual electrical signals.
+]
+
+#slide(title: "Components Working Together")[
+  #two-col(
+    [
+      - The *CPU* executes instructions
+      - *RAM* holds active instructions and data
+      - *Storage* keeps programs and files
+      - The *GPU* performs many similar calculations in parallel
+      - Input, output, and network devices connect the machine to its environment
+    ],
+    [#placeholder("open desktop computer with CPU, RAM, SSD, GPU, motherboard, power supply, and ports labelled", height: 9em)],
+  )
+]
+
+#slide(title: "The Motherboard")[
+  #two-col(
+    [
+      The motherboard provides the physical and electrical connections among components.
+
+      It contains sockets, memory slots, data links, controllers, and connectors. It also distributes power and carries timing and control signals.
+
+      The motherboard coordinates communication. It does not perform all computation itself.
+    ],
+    [#placeholder("annotated motherboard with CPU socket, RAM slots, storage connector, GPU slot, and external ports", height: 9.5em)],
+  )
+]
+
+#slide(title: "Information Needs a Representation")[
+  A computer manipulates physical states. We assign those states a meaning through an #alert[encoding].
+
+  The same bit pattern can represent:
+  - an unsigned number
+  - a character
+  - part of a color
+  - a machine instruction
+
+  Meaning comes from the convention used to interpret the bits.
+]
+
+#slide(title: "Bits and Bytes")[
+  #two-col(
+    [
+      A #alert[bit] is a logical value with two possible states: `0` or `1`.
+
+      With $n$ bits, we can encode $2^n$ combinations.
+
+      - 1 bit gives 2 combinations
+      - 4 bits give 16 combinations
+      - 8 bits give 256 combinations
+    ],
+    [
+      Eight bits form one #alert[byte].
+
+      ```text
+      01000001
+      ```
+
+      File and memory sizes count bytes: `KB`, `MB`, `GB`, and `TB`.
+    ],
+  )
+]
+
+#slide(title: "Binary Place Values")[
+  #placeholder("four binary columns labelled 8, 4, 2, 1, with 1011 producing 11", height: 7em)
+
+  ```text
+  1011₂ = 1×8 + 0×4 + 1×2 + 1×1
+         = 11₁₀
+  ```
+
+  Binary uses positional notation like decimal, but every position represents a power of 2.
+]
+
+#slide(title: "Decimal to Binary")[
+  Repeated division by 2 exposes the binary digits.
+
+  #set text(size: 0.88em)
+  #simple-table(
+    (1fr, 1fr, 1fr),
+    (
+      [*Division*], [*Quotient*], [*Remainder*],
+      [`13 ÷ 2`], [`6`], [`1`],
+      [`6 ÷ 2`], [`3`], [`0`],
+      [`3 ÷ 2`], [`1`], [`1`],
+      [`1 ÷ 2`], [`0`], [`1`],
+    ),
+  )
+
+  Read the remainders from bottom to top: `13₁₀ = 1101₂`.
+]
+
+#slide(title: "Binary Check")[
+  #activity("3 minutes")[
+    + Convert `10₁₀` to binary
+    + Convert `10110₂` to decimal
+    + Find the largest unsigned value that fits in four bits
   ]
 
+  #v(0.5em)
+  Answers: `1010₂`, `22₁₀`, and `15`.
 ]
 
-#slide(title: "Software")[
-  - #alert[Software]: set of instructions and algorithms used by a computer to solve a given problem
-    - The software allows hardware to work
-    - Instruction are coded in a specific language that can be used by a computer (Assembly, Python, Kotlin, Java, ...)
-  - #alert[Algorithm]: steps needed to be followed in some order to solve a problem
-    - A SW may include one or more algorithms 
-    - Algorithms are more general concepts that have to be translated in a specific programming language
+#slide(title: "ASCII and Unicode")[
+  #two-col(
+    [
+      *ASCII*
+
+      The original ASCII standard assigns numbers from 0 to 127 to letters, digits, punctuation, and control characters.
+
+      ```text
+      A = 65 = 01000001
+      a = 97 = 01100001
+      ```
+    ],
+    [
+      *Unicode and UTF-8*
+
+      Unicode assigns code points to characters across many writing systems. UTF-8 encodes those code points as one or more bytes.
+
+      One byte does not always equal one character.
+    ],
+  )
 ]
 
-#slide(title:"Software (2)")[
+#slide(title: "Logical Bits and Electrical Signals")[
+  #two-col(
+    [
+      A bit is an abstract logical state. Digital circuits often represent it with voltage ranges:
+
+      - a low range means logical `0`
+      - a high range means logical `1`
+
+      Ranges provide tolerance against small amounts of electrical noise.
+    ],
+    [#placeholder("voltage axis with low range, undefined transition region, and high range", height: 8.5em)],
+  )
+]
+
+#slide(title: "Transistors and Logic")[
+  #two-col(
+    [
+      A transistor can control whether current flows. Networks of transistors form logic gates.
+
+      Gates implement operations such as `NOT`, `AND`, and `OR`. Larger circuits combine gates into adders, memory cells, and processors.
+
+      Software eventually causes physical signals to move through these circuits.
+    ],
+    [#placeholder("transistor as a switch beside simple NOT and AND gates", height: 9em)],
+  )
+]
+
+// Source: Nappa, Hobbs, and Lanzi, arXiv:2105.05103. Belgian 2003 expert report cited there.
+#slide(title: "A Bit Flip With 4,096 Consequences")[
+  #two-col(
+    [
+      During the 2003 Belgian election, an electronic tally in Schaerbeek gave one candidate 4,096 extra preference votes.
+
+      `4,096 = 2¹²`, which matches changing one binary position from 0 to 1.
+
+      The expert report described a probable random bit inversion in memory. The precise physical cause was not proven.
+    ],
+    [#placeholder("vote count before and after one highlighted bit flips, changing the value by 4096", height: 9em)],
+  )
+
+  #source-note[#link("https://arxiv.org/abs/2105.05103")[Nappa et al., “Deja-Vu,” 2021, arXiv:2105.05103]]
+]
+
+#slide(title: "The Stored-Program Abstraction")[
+  John von Neumann's stored-program model gives us a useful simplified view:
+
+  - memory holds both instructions and data
+  - the processor reads instructions from memory
+  - input and output connect computation to the outside world
+
+  #v(0.5em)
+  #callout[The model hides many details of modern hardware, but it explains the path from a program file to executed instructions.]
+]
+
+#slide(title: "A Simplified Computer Architecture")[
+  #placeholder("stored-program architecture with CPU, memory, input/output, and persistent storage, with instructions and data labelled in memory", height: 9em)
+
+  The diagram is an abstraction, not a literal map of a modern chip. Its value comes from showing the roles and communication among components.
+]
+
+#slide(title: "The CPU")[
+  #two-col(
+    [
+      - The *control unit* coordinates instruction execution
+      - The *arithmetic logic unit* performs arithmetic and logical operations
+      - *Registers* hold values needed immediately
+      - *Cache* keeps recently used instructions and data close to the cores
+
+      A modern CPU may contain several cores.
+    ],
+    [#placeholder("simplified CPU with control unit, arithmetic logic unit, registers, cache, and multiple cores", height: 9em)],
+  )
+]
+
+#slide(title: "Fetch, Decode, Execute")[
+  #placeholder("cycle with four stages: fetch instruction, decode operation, execute, store result", height: 7.5em)
+
+  The CPU repeatedly:
+  + fetches an instruction from memory
+  + decodes what the instruction requests
+  + executes the operation
+  + stores the result and selects the next instruction
+
+  Real processors overlap and reorder work, but this simplified cycle remains a useful model.
+]
+
+#slide(title: "RAM, Storage, and Firmware")[
+  #set text(size: 0.88em)
+  #simple-table(
+    (1fr, 1.45fr, 1.7fr),
+    (
+      [*Component*], [*Main purpose*], [*What happens without power?*],
+      [RAM], [Active programs and data], [Contents disappear],
+      [SSD or hard disk], [Programs and user files], [Contents remain],
+      [Firmware storage], [Startup and device-control code], [Contents remain],
+    ),
+  )
+
+  #v(0.5em)
+  Modern firmware commonly lives in rewritable flash memory. “ROM” remains a useful historical label, but the storage may not be literally read-only.
+]
+
+#slide(title: "The GPU")[
+  #two-col(
+    [
+      A GPU contains many processing units designed to perform similar operations on many data elements.
+
+      Graphics naturally requires this form of parallel work. The same capability also supports scientific computing and machine learning.
+
+      A CPU remains better suited to many irregular, sequential, or control-heavy tasks.
+    ],
+    [#placeholder("CPU with a few powerful cores compared with GPU containing many smaller parallel units", height: 9em)],
+  )
+]
+
+#slide(title: "Opening an Application")[
+  #placeholder("program files on storage, operating system creating a process, code and data in RAM, CPU executing instructions, output on screen", height: 8.5em)
+
+  + Program files already exist on persistent storage
+  + The operating system creates a process and maps the required code and data into memory
+  + The CPU executes instructions from that process
+  + The application requests files, devices, network access, and screen output through the operating system
+]
+
+#focus-slide[Break\
+10 minutes]
+
+// ----------------------------------------------------------------------------
+// PART 3: OPERATING SYSTEMS
+// ----------------------------------------------------------------------------
+
+#focus-slide[Part 3\
+Operating Systems]
+
+#slide(title: "The Problem an Operating System Solves")[
+  #two-col(
+    [
+      A computer contains different processors, memories, devices, and communication links.
+
+      Without a common manager, every application would need to control each device directly and negotiate resource use with every other application.
+    ],
+    [#placeholder("applications competing for CPU, memory, disk, display, and network, followed by an OS mediating access", height: 9em)],
+  )
+]
+
+#slide(title: "A Layer of Abstraction")[
+  The operating system presents stable concepts such as:
+
+  - a *process* instead of raw CPU scheduling
+  - an address space instead of physical memory chips
+  - a *file* instead of storage sectors
+  - a network connection instead of signals on a network interface
+
+  Applications use these abstractions rather than controlling hardware directly.
+]
+
+#slide(title: "Operating System Responsibilities")[
+  #set text(size: 0.88em)
+  #simple-table(
+    (1.15fr, 2.7fr),
+    (
+      [*Area*], [*What the operating system does*],
+      [Processing], [Starts processes and schedules their execution],
+      [Memory], [Assigns memory and isolates processes],
+      [Files], [Organizes persistent data and controls access],
+      [Devices], [Provides standard interfaces through drivers],
+      [Networking], [Sends and receives data through protocol stacks],
+      [Security], [Identifies users and enforces permissions],
+    ),
+  )
+]
+
+#slide(title: "Operating System Families")[
+  #two-col(
+    [
+      On personal computers:
+      - Microsoft Windows
+      - macOS
+      - Linux distributions
+
+      On mobile devices:
+      - Android
+      - iOS
+    ],
+    [
+      Servers, cloud machines, network equipment, vehicles, and embedded devices also run operating systems.
+
+      Interfaces differ, but the same core responsibilities remain.
+    ],
+  )
+]
+
+#slide(title: "Program and Process")[
+  #simple-table(
+    (1fr, 1.3fr, 2fr),
+    (
+      [*Concept*], [*Analogy*], [*Meaning*],
+      [Program], [A recipe], [Instructions and related files stored on disk],
+      [Process], [Someone cooking], [A running instance with memory, state, and operating-system resources],
+    ),
+  )
+
+  #v(0.6em)
+  Running the same program twice usually creates two processes with separate state.
+]
+
+#slide(title: "Graphical and Command-Line Interfaces")[
+  #two-col(
+    [
+      *Graphical user interface*
+
+      Early interactive systems relied heavily on text commands. Graphical interfaces later made actions visible through windows, icons, menus, and a pointer. Direct manipulation lowered the barrier to interactive computing.
+    ],
+    [
+      *Command-line interface*
+
+      Text commands are compact, composable, and easy to automate. They remain central in development, servers, and data workflows.
+    ],
+  )
+
+  Both interfaces request services from the same operating system.
+]
+
+#slide(title: "Terminal, Shell, and Command")[
+  #set text(size: 0.9em)
+  #simple-table(
+    (1fr, 2.6fr),
+    (
+      [*Term*], [*Meaning*],
+      [Terminal], [The application or window that displays a text session],
+      [Shell], [The program that reads commands and launches other programs],
+      [Command], [The instruction entered by the user, often the name of another program],
+    ),
+  )
+
+  ```bash
+  pwd
+  ls
+  cd project
+  python report.py
   ```
-  1) Look at the firt element in the list
-  2) Compare the current number with the next number
-  3) If the next number is smaller, swap the two elements
-  4) Continue until no swaps are made
+]
+
+#slide(title: "The File System")[
+  #two-col(
+    [
+      The file system gives stored bytes a logical structure:
+      - files have names and metadata
+      - directories group files and other directories
+      - paths identify locations
+      - permissions restrict access
+
+      The file system is an operating-system abstraction over storage devices.
+    ],
+    [#placeholder("directory tree with project, data, src, report.py, and orders.csv", height: 9em)],
+  )
+]
+
+#slide(title: "File System pt.2")[
+
+  qui slide con gli alberi di come sono organizzati diversamente i FS in linux/windows
+]
+
+#slide(title: "Absolute and Relative Paths")[
+  #two-col(
+    [
+      *Absolute path*
+
+      Starts from a filesystem root.
+      ```text
+      /home/alice/project/data/orders.csv
+      C:\Users\Alice\project\data\orders.csv
+      ```
+    ],
+    [
+      *Relative path*
+
+      Starts from the current working directory.
+      ```text
+      ./data/orders.csv
+      ../shared/config.json
+      ```
+
+      `.` means current directory. `..` means parent directory.
+    ],
+  )
+]
+
+// ----------------------------------------------------------------------------
+// PART 4: PROGRAMMING CONCEPTS
+// ----------------------------------------------------------------------------
+
+#focus-slide[Part 4\
+Algorithms and Programming Languages]
+
+#slide(title: "Algorithms")[
+  An algorithm is a finite and unambiguous procedure that transforms valid input into a result or observable effect.
+
+  A useful algorithm states:
+  - what input it expects
+  - which steps run and in what order
+  - how it handles relevant cases
+  - when it stops
+
+  We also evaluate correctness, execution time, and memory use.
+]
+
+#slide(title: "Natural Language Can Be Ambiguous")[
+  Consider this instruction:
+
+  #align(center)[_“Take the largest value and divide it by two if it is positive.”_]
+
+  Questions appear immediately:
+  - What happens if the collection is empty?
+  - What happens when several values share the maximum?
+  - Does “it” refer to the value or the result?
+  - What should happen when the maximum is zero or negative?
+
+  Humans use context to resolve ambiguity. Computers need explicit rules.
+]
+
+#slide(title: "A More Precise Procedure")[
+  ```text
+  input: a non-empty collection of numbers
+
+  largest = maximum value in the collection
+
+  if largest > 0:
+      output largest / 2
+  otherwise:
+      output largest
   ```
+
+  The procedure now defines its input, condition, branches, and output.
+]
+
+#slide(title: "Pseudocode and Source Code")[
+  #two-col(
+    [
+      *Pseudocode*
+
+      Expresses an algorithm with structured but informal notation. It supports reasoning without committing to a language.
+
+      ```text
+      for each order:
+          add its amount to total
+      ```
+    ],
+    [
+      *Python source code*
+
+      Uses the exact syntax and semantics of Python. A Python implementation can execute it.
+
+      ```python
+      for order in orders:
+          total = total + order
+      ```
+    ],
+  )
+]
+
+#slide(title: "Programming Languages")[
+  A programming language is a formal system for expressing computations.
+
+  - *Syntax* defines which forms are valid
+  - *Semantics* defines what valid forms mean
+  - *Abstractions* let one expression represent many lower-level operations
+  - *Libraries* provide reusable solutions to common tasks
+
+  Formal rules allow tools to translate and execute programs consistently.
+]
+
+#slide(title: "Why Many Languages Exist")[
+  #set text(size: 0.88em)
+  #simple-table(
+    (1.2fr, 1.8fr, 1.25fr),
+    (
+      [*Priority*], [*Typical emphasis*], [*Examples*],
+      [Hardware control], [Predictable performance and memory access], [C, Rust],
+      [Large applications], [Structure, tooling, and maintainability], [Java, `C#`],
+      [Web pages], [Interaction inside the browser], [JavaScript],
+      [Data and automation], [Readable code and broad libraries], [Python],
+      [Database queries], [Describe the desired data], [SQL],
+    ),
+  )
+
+  Existing systems, communities, and trade-offs all influence language choice.
+]
+
+#slide(title: "Levels of Abstraction")[
+  #placeholder("ladder with machine code, assembly, C, and Python, showing increasing abstraction and decreasing direct hardware control", height: 9em)
+
+  Higher-level languages hide more machine detail and offer concepts closer to the problem. Lower-level languages expose more control over hardware and memory.
+]
+
+#slide(title: "One Intention at Four Levels")[
+  #set text(size: 0.84em)
+  #simple-table(
+    (1fr, 2.9fr),
+    (
+      [*Level*], [*Illustrative form*],
+      [Human intention], [Add tax to the price],
+      [Python], [`total = price + tax`],
+      [Assembly-like], [`LOAD R1, price` then `ADD R1, tax` then `STORE total, R1`],
+      [Machine code], [`00101100 00010001 ...`],
+    ),
+  )
+
+  One high-level statement may expand into many instructions. The precise expansion depends on the implementation and processor.
+]
+
+#slide(title: "The Translation Chain")[
+  #placeholder("source code, translator, intermediate or machine representation, operating system, CPU", height: 8.5em)
+
+  The programmer writes source code. Translators and runtimes convert that code into operations supported by the execution environment. The CPU ultimately executes machine instructions.
+]
+
+#slide(title: "Compiler")[
+  #two-col(
+    [
+      A compiler analyzes source code and produces another representation before the program runs.
+
+      The output may be native machine code or an intermediate form such as bytecode.
+
+      Translation happens once per build, while the result may run many times.
+    ],
+    [#placeholder("translator finishing an entire book before readers receive the translated edition", height: 8.5em)],
+  )
+]
+
+#slide(title: "Interpreter")[
+  #two-col(
+    [
+      An interpreter executes a program representation while the program runs.
+
+      This supports interactive experimentation and allows the runtime to inspect the current execution state.
+
+      The interpreter must be available on the machine that runs the program.
+    ],
+    [#placeholder("simultaneous interpreter translating while a speaker talks", height: 8.5em)],
+  )
+]
+
+#slide(title: "Typical Trade-offs")[
+  #set text(size: 0.88em)
+  #simple-table(
+    (1.15fr, 1.65fr, 1.65fr),
+    (
+      [*Question*], [*Ahead-of-time compilation often helps*], [*Interpretation often helps*],
+      [Feedback], [Errors may appear during a build], [Interactive experiments give immediate results],
+      [Execution], [Native code can reduce runtime overhead], [The runtime can inspect and adapt execution],
+      [Distribution], [A built executable may be self-contained], [Source or bytecode can stay portable with a runtime],
+    ),
+  )
+
+  These are tendencies, not universal rules.
+]
+
+#slide(title: "Real Implementations Combine Strategies")[
+  The categories describe execution strategies rather than permanent properties of a language.
+
+  #v(0.5em)
+  #simple-table(
+    (1fr, 2.8fr),
+    (
+      [*Implementation*], [*Typical path*],
+      [C compiler], [Source code becomes native machine code],
+      [Java virtual machine], [Source becomes bytecode, then the virtual machine interprets or compiles it],
+      [Browser JavaScript engine], [The engine interprets code and compiles frequently used parts],
+      [CPython], [Python source becomes bytecode, then the Python virtual machine executes it],
+    ),
+  )
+]
+
+#slide(title: "Program Building Blocks")[
+  #set text(size: 0.88em)
+  #simple-table(
+    (1.15fr, 1.6fr, 1.75fr),
+    (
+      [*Block*], [*Question*], [*Example*],
+      [Sequence], [What happens first and next?], [Read, validate, calculate, report],
+      [State], [What must the program remember?], [Current total and error count],
+      [Selection], [Which branch should run?], [Flag an order when its value is high],
+      [Iteration], [Which operation repeats?], [Process every order],
+      [Function], [Which procedure deserves a name?], [`summarize_orders(...)`],
+    ),
+  )
+]
+
+#slide(title: "Control Flow Diagrams")[
+  #placeholder("three small flowcharts: sequence, if/else selection, and loop with a condition", height: 9em)
+
+  A flowchart makes execution order visible. Each decision needs a condition with a true or false result. Each loop needs a path that eventually stops.
+]
+
+#slide(title: "Algorithm Design Check")[
+  #activity("5 minutes")[
+    Return to the automation candidate from the beginning.
+
+    + Divide it into four to seven ordered steps
+    + Add one explicit decision
+    + Add one repeated action
+    + State a stopping condition
+    + Identify one input that should produce an error
+  ]
+]
+
+#slide(title: "Bridge to Python")[
+  The classroom block established the complete path:
+
+  #align(center)[*problem · algorithm · source code · runtime · operating system · hardware · physical state*]
+
+  #v(0.8em)
+  In the laboratory, we move in the other direction. We start with a problem, write Python source code, execute it, inspect the state, and correct the result.
+]
+
+// =============================================================================
+// LAB BLOCK
+// =============================================================================
+
+#focus-slide[Laboratory Block\
+Python Fundamentals]
+
+#slide(title: "Laboratory Plan")[
+  #set text(size: 0.88em)
+  #simple-table(
+    (1.1fr, 2.3fr, 1.15fr),
+    (
+      [*Time*], [*Topic*], [*Mode*],
+      [00:00–00:20], [Ways to run Python and first program], [Demo + setup],
+      [00:20–00:55], [Values, variables, types, operators, strings], [Demo + exercise],
+      [00:55–01:25], [Execution flow and conditions], [Demo + exercise],
+      [01:25–01:35], [Break], [10 minutes],
+      [01:35–02:05], [Loops], [Demo + exercise],
+      [02:05–02:30], [Collections], [Demo + practice],
+      [02:30–02:40], [Functions], [Demo],
+      [02:40–03:00], [Final exercise and recap], [Work + debrief],
+    ),
+  )
+]
+
+#slide(title: "Why Python")[
+  #two-col(
+    [
+      Python offers:
+      - readable syntax
+      - immediate interactive feedback
+      - libraries for data, automation, science, web systems, and machine learning
+      - the same language for small scripts and large projects
+    ],
+    [
+      In this laboratory, Python lets us focus on the concepts:
+      - values and state
+      - decisions
+      - repetition
+      - reusable procedures
+
+      The syntax remains visible, but it does not dominate the lesson.
+    ],
+  )
+]
+
+#slide(title: "Three Ways to Run Python")[
+  #set text(size: 0.88em)
+  #simple-table(
+    (1fr, 1.65fr, 1.65fr),
+    (
+      [*Mode*], [*Best for*], [*Important detail*],
+      [REPL], [Trying one expression at a time], [State lasts until the session ends],
+      [Script `.py`], [Repeatable programs and projects], [The file runs from top to bottom],
+      [Notebook], [Explanation, experiments, and data analysis], [Cells share state and may run out of order],
+    ),
+  )
+
+  #v(0.5em)
+  We will use a notebook for exercises, while also seeing how the same code works in a script.
+]
+
+#slide(title: "The Python REPL")[
+  The Read-Evaluate-Print Loop reads an expression, evaluates it, prints the result, and waits for the next input.
 
   ```python
-  def bubble_sort(arr):
-    for n in range(len(arr) - 1, 0, -1):
-        for i in range(n):
-            if arr[i] > arr[i + 1]:
-                swapped = True
-                arr[i], arr[i + 1] = arr[i + 1], arr[i]
+  >>> 2 + 3 * 4
+  14
+  >>> course = "DTM"
+  >>> print(f"Hello, {course}!")
+  Hello, DTM!
   ```
 
+  The REPL is useful for exploration. A sequence worth keeping belongs in a script or notebook.
 ]
 
-#slide(title:"Hardware vs Software")[
-  - _Hardware is just petrified software_
-    - The software is #alert[equivalent], from a logical point of view, to the hardware
-    - Hardware can also be #alert[simulated] in software and any operation performed by software can also #alert[be built directly] into the hardware
-    - The decision to put certain functions in hardware and others in software is based on:
-      - #underline[Cost], HW > SW
-      - #underline[Speed], HW > SW
-      - #underline[Reliability], HW > SW
-      - #underline[Frequency of expected changes], HW < SW
+#slide(title: "A Python Script")[
+  File: `hello.py`
+
+  ```python
+  course = "DTM"
+  students = 35
+
+  print(f"{course} has {students} students")
+  ```
+
+  Run it from a shell:
+
+  ```bash
+  python hello.py
+  ```
+
+  Some systems use `python3` or the Windows launcher `py`.
 ]
 
-#slide(title:"Hardware vs Software (2)")[
-  - It is important, in a project, deciding what is software and what is hardware
-  - Generally, for #alert[clearly definable] and #alert[repetitive] actions, creating a #alert[dedicated HW solution] will speed up operations when compared to SW running on a general-purpose processor
-  - Examples of HW accelerators:
-    - Encryption
-    - (Pseudo)Random Number Generator
+// Source: https://github.com/phyelds/phyelds, accessed 2026-09-25.
+#slide(title: "A Real Python Project")[
+  #two-col(
+    [
+      A larger program is divided across files and directories:
+      - source modules
+      - tests
+      - documentation
+      - configuration and dependency metadata
+
+      Phyelds is a Python toolkit for building and experimenting with decentralized adaptive systems.
+    ],
+    [#placeholder("screenshot of the phyelds/phyelds GitHub repository, highlighting README, src, tests, and pyproject.toml", height: 9em)],
+  )
+
+  #source-note[#link("https://github.com/phyelds/phyelds")[github.com/phyelds/phyelds]]
+]
+
+#slide(title: "Jupyter and Colab Notebooks")[
+  #two-col(
+    [
+      A notebook combines:
+      - executable code cells
+      - results directly below the code
+      - formatted explanations
+
+      Google Colab runs notebooks in a browser. Jupyter can run locally.
+    ],
+    [
+      Cells share a Python session. Their execution order matters.
+
+      If results become confusing:
+      + restart the runtime
+      + run all cells from the beginning
+
+      A notebook should work in a clean session.
+    ],
+  )
+]
+
+#slide(title: "First Run")[
+  Open a notebook or Python environment and run:
+
+  ```python
+  print("Hello, Python!")
+  print(2 + 3)
+  ```
+
+  Then deliberately create an error:
+
+  ```python
+  print(unknown_name)
+  ```
+
+  Read the last line of the traceback first. It names the exception and usually contains the most useful message.
+]
+
+#slide(title: "Three Kinds of Problems")[
+  #set text(size: 0.88em)
+  #simple-table(
+    (1.05fr, 1.55fr, 1.85fr),
+    (
+      [*Problem*], [*What happens*], [*Example*],
+      [Syntax error], [Python cannot parse the program], [A missing parenthesis],
+      [Runtime exception], [Execution reaches an invalid operation], [Using a name that does not exist],
+      [Logic error], [The program runs but gives the wrong result], [Subtracting the discount twice],
+    ),
+  )
+
+  Debugging compares the intended procedure with the program's actual state and behavior.
+]
+
+// ----------------------------------------------------------------------------
+// LAB PART 1: VALUES, VARIABLES, TYPES, OPERATORS, STRINGS
+// ----------------------------------------------------------------------------
+
+#focus-slide[Lab 1\
+Values and Variables]
+
+#slide(title: "Values and Expressions")[
+  A value is a piece of data. An expression combines values and operations to produce another value.
+
+  ```python
+  42
+  3.14
+  "wireless sensor"
+  True
+
+  12 * 49.90
+  (1200 - 300) / 1200
+  ```
+
+  Python evaluates the inner operations first, following precedence and parentheses.
+]
+
+#slide(title: "Names and Assignment")[
+  ```python
+  unit_price = 49.90
+  quantity = 12
+  subtotal = unit_price * quantity
+  ```
+
+  - `=` associates a name with a value
+  - the right-hand expression is evaluated before the association changes
+  - later expressions can use the name
+  - a meaningful name documents the role of the value
+
+]
+
+#slide(title: "Basic Python Types")[
+  #simple-table(
+    (1fr, 1.25fr, 1.9fr),
+    (
+      [*Type*], [*Example*], [*Typical meaning*],
+      [`int`], [`12`], [Whole number],
+      [`float`], [`49.90`], [Number with a fractional part],
+      [`str`], [`"sensor"`], [Unicode text],
+      [`bool`], [`True`], [Logical truth value],
+      [`NoneType`], [`None`], [Absence of a value],
+    ),
+  )
+
+  ```python
+  type(49.90)  # float
+  ```
+]
+
+#slide(title: "Meaningful Variable Names")[
+  At school, my friend Ramzi used to name *every variable after himself*:
   
-  #components.side-by-side(columns: (1fr, 1fr), gutter: 0em)[
-    #figure(image("images/RNG.png", width: 50%))
-  ][
-    #figure(image("images/encryption.jpg", width: 50%))
-  ]
-]
+  #simple-table(
+    (1fr, 1fr),
+    (
+      [**Ramzi's version**], [**A readable version**],
 
-#focus-slide[ Let's look deeper into the hardware components ]
+      [
+        ```python
+        ramzi1 = 49.90
+        ramzi2 = 12
+        ramzi3 = ramzi1 * ramzi2
+        ```
+      ],
+      [
+        ```python
+        unit_price = 49.90
+        quantity = 12
+        subtotal = unit_price * quantity
+        ```
+      ],
+    ),
+  )
 
-#slide(title:"Motherboard")[
-  - It is the #alert[main] printed circuit board
-  - It #alert[holds] many of the #alert[crucial] electronic components of a system and allows #alert[communications] between them  
-  - It #alert[distributes the power], received from the power supply, to all components
+  Both programs work, but after five minutes nobody — *not even Ramzi* —
+  remembers what `ramzi1`, `ramzi2`, and `ramzi3` mean.
 
-  #figure(image("images/MB-explained.png", width:40%))
-]
-
-#slide(title:"Motherboard (2)")[
-  - #alert[Peripheral Component Interconnect]
-  - Expansion slot used for connecting expansion cards to a computer's motherboard
-  - These expansion cards provide additional functionality or capabilities to a computer system
-
-  #components.side-by-side(columns: (1fr, 1fr), gutter: 0em)[
-    - Different types of PCI, for example: PCI and PCI/e
-    - PCI/e not backward compatible with PCI
-    - Different bandwidth (MB/s vs GB/s)
-  ][
-    #figure(image("images/pci.jpeg", width:80%))
-  ]
-]
-
-#slide(title:"Motherboard (3)")[
- #align(center)[ === Examples of cards for PCI ]
-  #v(2em)
- #components.side-by-side(columns: (1fr, 1fr, 1fr), gutter: 0em)[
   #align(center)[
-    Graphics processing unit
-    #figure(image("images/gpu.jpeg", width: 75%))]
- ][
-  #align(center)[
-    Ethernet card
-    #figure(image("images/ethernet.png", width: 95%))]
- ][
-  #align(center)[
-    Wi-Fi Card
-    #figure(image("images/wifi.png", width: 50%))]
- ]
-]
-
-#slide(title:"Motherboard (4)")[
-  - There are #alert[different types] of motherboards designed for different applications: 
-    - Multiple PCI Express slots for multiple GPUs, for example for HPC, Deep Learning, Mining, ...
-    - ATX (Advanced Technology eXtended) for desktop computers
-      - Different shapes and sizes
-    - Motherboards built for embedded systems, rackmount servers, mobiles, vehicles, ...
-  #figure(image("images/atx.jpg", width: 45%))
-]
-
-#slide(title:"Connectors")[
-  - Huge #alert[variety] of #alert[connectors] are available for different uses:
-    - #alert[Video] (VGA, HDMI, DisplayPort, ...)
-    - #alert[Data] (Fireware, USB, ...)
-    - ...
-  - This is so for several reasons, for instance #alert[technological] and #alert[marketing]
- 
-  #components.side-by-side(columns: (1fr, 1fr), gutter: 0em)[
-  - EU started to #alert[regulate] the connector market
-      - iPhone 15, from lightning to USB-c
-  ][
-  #figure(image("images/connectors.jpeg", width: 60%))]
-]
-
-#slide(title:"Central Processing Unit (CPU)")[
-  - #alert[Brain] of a system, every single #alert[operation] that you do with the computer is #alert[processed] by the CPU
-  - A CPU controls the following functions:
-    - #alert[Instruction management]
-      - Fetching and interpretation of the program instructions
-    - #alert[Data computation]
-      - Computation of binary operations that belong, for example, to the arithmetic logic (but not only)
-    - #alert[Data memorization]
-      - Permanent and volatile data memorization
-    - #alert[Data transfer]
-      - Input and output functionalities
-
-  #place(right, dy:-5.5em)[
-    #figure(image("images/cpus.png", width:40%))
-  ]
-
-]
-
-
-#slide(title:"Central Processing Unit (2)")[
-  #align(center)[The CPU is programmed as a #alert[Finite State Machine] (FSM) with 3 states]
-  #figure(image("images/cpu-cycle.png", width:66%))
-]
-
-#slide(title:"Central Processing Unit (3)")[
-  - There are 3 types of instructions run by the CPU
-    - #alert[ALU operations]: all the omputations on the data through the computation unit (Arithmetic Logic Unit)
-    - #alert[Load/Store operations]: I/O operations in memories and I/O devices
-    - #alert[Control operations]:  all the operations to control the internal units of the CPU and the ones needed by the Operating System
-]
-
-#slide(title:"Central Processing Unit (4)")[
-  #components.side-by-side(columns: (1fr, 1fr), gutter: 0em)[
-    - Two main units:
-      - #alert[Control Unit] (CU)
-      - #alert[Arithmetic Logic Unit] (ALU)
-    - A CPU has also several internal memories called #alert[registers]
-    - A CPU communicates with memories and other devices through the #alert[BUS] 
-  ][ 
-    #figure(image("images/cpu-arch.jpg", width: 90%))
+    #text(size: 1.2em, weight: "bold")[
+      The computer understands both. Humans understand only one.
+    ]
   ]
 ]
 
-#slide(title:"Central Processing Unit (5)")[
-  - We can see the Control Unit, as the name suggests, as the #alert[main controller] of all operations
-  - The ALU is the #alert[real worker], who works to complete the instructions received
-  - #alert[Registers] are essential in order to get and store data and instructions
-    - Registers are #alert[inside] the CPU
-    - Registers are the #alert[fastest] memory type
-    - Registers are #alert[very small]
-  - Without the CU, the ALU is not able to work
+
+#slide(title: "Operators")[
+  #set text(size: 0.88em)
+  #simple-table(
+    (1.05fr, 1.35fr, 2fr),
+    (
+      [*Family*], [*Operators*], [*Example*],
+      [Arithmetic], [`+  -  *  /  //  %  **`], [`7 // 2` gives `3`, while `7 % 2` gives `1`],
+      [Comparison], [`==  !=  <  <=  >  >=`], [`total >= 500` gives a boolean],
+      [Boolean], [`and  or  not`], [`valid and total >= 500`],
+    ),
+  )
+
+  `=` assigns a value. `==` compares two values.
 ]
 
-#slide(title:"A 1-bit ALU")[
-   #figure(image("images/1b-alu.png", width: 45%))
+#slide(title: "Strings and Input")[
+  #two-col(
+    [
+      A string stores Unicode text.
+
+      ```python
+      product = "  wireless sensor  "
+      clean = product.strip().title()
+      message = f"Product: {clean}"
+      ```
+
+      Python has no separate `char` type. A one-character string is still a string.
+    ],
+    [
+      `input()` always returns a string.
+
+      ```python
+      raw = input("Quantity: ")
+      quantity = int(raw)
+      ```
+
+      Conversions such as `int(...)` and `float(...)` can fail when the text has the wrong format.
+    ],
+  )
 ]
 
-#slide(title:"Control Unit")[
-  - It #alert[directs the operations] of the other units by providing #alert[timing] and #alert[control signals]
-  - It tells the computer's memory, arithmetic logic unit and input and output devices how to respond to the instructions that have been sent to the processor
-  - There are two types of CUs:
-    - #alert[Hardwired]: they are implemented through use of combinational logic units, featuring a finite number of gates that can generate specific results
-    - #alert[Microprogrammed]: the CU has a special control memory to store microinstructions. Therefore, the control operations are not done directly by hardware, but they are a sort of program, called microprogram.
-]
+#slide(title: "Exercise 1: Order Total")[
+  #activity("12 minutes")[
+    Create variables for:
+    - a product name
+    - unit price
+    - quantity
+    - discount rate
 
-#slide(title:"Control Unit: Hardwired vs Microprogrammed")[
-  - #alert[Hardwired]
-    - Generally faster than the microprogrammed ones
-    - Fixed architecture: it requires changes in the wiring if the instruction set is modified or changed
-    - High speed but very limited flexibility
-  - #alert[Microprogrammed]
-    - Simplicity of its structure
-    - Microprogram can be debugged and replaced very like software
-    - Flexibility
+    Calculate the subtotal and discounted total. Print a sentence such as:
 
-]
+    ```text
+    12 Wireless Sensors: €538.92
+    ```
 
-#slide(title:"Memory")[
-  #components.side-by-side(columns: (1fr, 1fr), gutter: 0em)[
-    - A memory is the place in which #alert[information is stored]
-    - The #alert[basic unit] of memory is the binary digit, called bit. A bit may contain a 0 or a 1
-    - Memories consist of a number of #alert[cells] each of which can store this piece of information
-    - Each cell has a number, called its #alert[address], by which programs can refer to it
-  ][
-    #figure(image("images/memory.png", width: 80%))
-  ]
-  
-]
-
-#slide(title:"Memory (2)")[
-  - In a computer, there are 2 types of memory:
-    - #alert[Primary memory]
-      -  It includes the _Random Access Memory_ (RAM) and the _Read Only Memory_ (ROM)
-      -  Usually primary memory is very #underline[fast] and #underline[small-sized] and located #underline[close to the processor]
-      - RAM is _#underline[volatile]_ (data disappear when the power goes out)
-      - ROM is #underline[non-volatile] (the information is maintained even if the component loses power).
-    - #alert[Secondary memory]
-      - It includes _HDD_ (Hard Disk) and _SSD_ (Solid State Disk)
-      - Usually is #underline[slower] than RAM/ROM
-      - It has a #underline[greater capacity] than primary memory (1, 2, 8 TB vs 64, 128, 256 GB)
-      - It is #underline[not close] to the processor (it can be located in an external separate storage device)
-      - It is #underline[not volatile]
-]
-
-#slide(title:"Random Access Memory")[
-  #align(center)[ 
-    RAM is the #alert[hardware location] in a computer where #underline[programs], the #underline[operating system] and #underline[data in current use] are kept so that they can be #underline[quickly reached] by the computer's processor 
-  ]
-
-   #figure(image("images/ram.jpg", width: 60%))
-]
-
-#slide(title:"Random Access Memory (2)")[
-  - Random Access Memory since #alert[any storage location can be accessed directly] in the same amount of time
-  - There are 2 types of RAM
-    - #alert[Static RAM] (SRAM)
-    - #alert[Dynamic RAM] (DRAM)
-  - Static vs Dynamic
-    - Static is #underline[faster]
-    - Dynamic is #underline[less expensive]
-    - Dynamic has a #underline[less power consumption]
-  - SRAM is used to create the CPU's speed-sensitive cache, while DRAM forms the larger system RAM space
-]
-
-#slide(title:"Read Only Memory")[
-  - It is used as the computer begins to #alert[boot up], in order to #underline[transfer data from the hard disk to the RAM memory]
-  - It is used to #underline[store the start-up instructions] for a computer
-  - When you press the power button, the RAM memory is #underline[empty] 
-- #alert[It is important to store the essential start-up instructions in a ROM memory]
-    - These start-up instructions are the Basic Input-Output System (BIOS) or the more recent Unified Extensible Firmware Interface (UEFI)
-    - The BIOS instructs the CPU to start reading code at specific memory locations
-    - In some modern devices, the BIOS also check the components through the Power-On Self-Test (POST)
-]
-
-#slide(title:"Read Only Memory")[
-  - There are #alert[3 different types] of ROM
-    - #underline[Programmable Read Only Memory] (PROM), also known as One Time Programmable (OTP)
-    - #underline[Erasable Programmable Read Only Memory] (EPROM), erasable through ultraviolet light source
-    - #underline[Electrically Erasable Programmable Read-Only Memory] (EEPROM), erasable through electricity.
-
-   #figure(image("images/eprom.jpeg", width: 30%))
-]
-
-#slide(title:"Hard Disks")[
-  #components.side-by-side(columns: (1fr, 1fr), gutter: 0em)[
-    - It #alert[stores and retrieves] digital data using #underline[magnetic storage] and one or more #underline[rigid rotating platters] coated with magnetic material
-    - Data are stored in #alert[logic units] defined as: sectors, clusters, tracks and cilinders
-    - It is an #alert[electro-mechanical] data storage device, composed by many components
-    - Data, in terms of 0/1, are stored as #alert[magnetic signals] read and written by a head
-  ][
-    #figure(image("images/hdd.png", width: 80%))
-  ] 
-]
-
-#slide(title:"HDD vs SSD")[
-  - A #alert[Solid State Disk] (SSD) is a #underline[completely electronic] memory based on flash memories
-  - Pro of SSDs with the respect of HDDs
-    - #underline[Higher speed]
-      - Access Time (time spent in retrieving data): μs vs ms
-      - Transfer Time (time spent in transferring data): MB vs GB
-    - #underline[SSD are more reliable]
-      - No mechanical parts in movement
-      - Higher impact resistance and no heat produced
-    - BUT
-      - HDDs are chaper: 0,1€/GB vs 0,02€/GB (up to 2020)
-      - SSDs have minor life in case of frequent writing operation
-      - It is very hard retrieve information from broken SSD (easier for HDDs)
-]
-
-
-#slide(title:"Recap: memory organization")[
-  #figure(image("images/mem-org.png", width: 70%))
-]
-
-#slide(title:"Memory hierarchy")[
-  - We can define a #alert[memory hierarchy] based on the
-    - #underline[Speed]: the amount of time that it takes the memory to receive a request and then read or write data
-    - #underline[Size]: the amount of the space that can be written on the memory
-    - #underline[Cost]
-
-  #figure(image("images/mem-hier.png", width: 41%))
-]
-
-#slide(title:"Cache memory")[
-  - Historically, #alert[CPUs have always been faster than memories]. Memory is a #underline[bottleneck] for the CPU performance
-  - Actually, the problem is both #alert[technology and economics]
-    - Engineers know how to build memories that are as fast as CPUs, BUT #underline[they have to be located on the CPU chip]
-    - Going over the bus to memory is #underline[very slow]
-    - Putting a large memory on the CPU chip makes it #underline[bigger], which makes it #underline[more expensive], and even if cost were not an issue, there are #underline[limits to how big a CPU chip can be made]
-  - The #alert[solution] is having a #underline[small amount of fast memory] and a #underline[large amount of slow memory]
-  - This small and fast memory is called #alert[cache]
-
-  #place(right, dy:-0.5em)[
-    #figure(image("images/cache.png", width:25%))
+    Inspect at least two values with `type()`. Then change the inputs and run the cell again.
   ]
 ]
 
-#slide(title:"Cache memory (2)")[
-  - The basic idea behind a cache is simple: the #alert[most heavily used memory words are kept in the cache]. When the CPU needs a word, it first looks in the cache. Only if the word is not there does it go to main memory
-  - What are the “most heavily used memory words”? We can rely on 2 #underline[principles]:
-    - #alert[Spatial locality]: if a particular storage location is referenced at a particular time, then it is likely that nearby memory locations will be referenced in the near future
-    - #alert[Temporal locality]: if at one point a particular memory location is referenced, then it is likely that the same location will be referenced again in the near future
-  - We have a #alert[hit] when a word is in the cache, otherwise there is a miss
-]
+#slide(title: "Exercise 1: Solution")[
+  #solution[
+    ```python
+    product = "wireless sensor"
+    unit_price = 49.90
+    quantity = 12
+    discount_rate = 0.10
 
-#slide(title:"Cache memory (3)")[
-  - Some issues 
-    - #alert[Cache size]: the bigger the cache, the better it performs, but also the more it costs
-    - #alert[Cache organization]: if the cache is full, how to define which spaces to free? We need specific policies
-    - #alert[Number of caches]: usually chips have a primary (L1) cache on chip, a secondary (L2) cache off chip but in the same package, and a third (L3) cache still further away
-  - #underline[Different levels of cache memory for different speeds], since they are closer to the CPU and built with different technologies
+    subtotal = unit_price * quantity
+    total = subtotal * (1 - discount_rate)
 
-  #place(right, dy:-0.5em)[
-    #figure(image("images/cache-levels.png", width:30%))
+    print(f"{quantity} {product.title()}s: €{total:.2f}")
+    print(type(total))
+    ```
   ]
 ]
 
-#slide(title:"Cache memory (4)")[
-   #figure(image("images/cache-i7.png", width: 70%))
+#slide(title: "Sequential Execution and State")[
+  Python normally executes statements from top to bottom.
+
+  #simple-table(
+    (1.45fr, 1.2fr, 1.2fr),
+    (
+      [*Statement*], [*Name changed*], [*New value*],
+      [`quantity = 12`], [`quantity`], [`12`],
+      [`unit_price = 49.90`], [`unit_price`], [`49.90`],
+      [`subtotal = quantity * unit_price`], [`subtotal`], [`598.8`],
+      [`quantity = quantity + 1`], [`quantity`], [`13`],
+    ),
+  )
+
+  A variable's current value depends on which statements have already executed.
 ]
 
-#focus-slide[
-  How are all these things organised inside a computer?
+// ----------------------------------------------------------------------------
+// LAB PART 2: CONDITIONS
+// ----------------------------------------------------------------------------
+
+#focus-slide[Lab 2\
+Conditions]
+
+#slide(title: "Boolean Conditions")[
+  Comparisons produce `True` or `False`.
+
+  ```python
+  total >= 500
+  quantity == 0
+  product != ""
+  ```
+
+  Boolean operators combine conditions:
+
+  ```python
+  total >= 500 and quantity >= 10
+  product == "sensor" or product == "gateway"
+  not quantity == 0
+  ```
 ]
 
-#slide(title:"Computer architecture")[
-  - All components introduced are #alert[connected] through one or more #alert[buses]
-  - A bus is a #alert[communication system] that transfers data between components inside a computer, or even between computers
-  - Different buses since there are two types of organizations for memories (and in general computers): #alert[Von Neumann] Architecture and #alert[Harvard] Architecture
+#slide(title: "Boolean Logic: Truth Tables")[
+  #grid(
+    columns: (1fr, 1fr, 0.8fr),
+    gutter: 1em,
+
+    [
+      #align(center)[**AND**]
+
+      #simple-table(
+        (1fr, 1fr, 1.3fr),
+        (
+          [**A**], [**B**], [**A and B**],
+          [`F`], [`F`], [`F`],
+          [`F`], [`T`],  [`F`],
+          [`T`],  [`F`], [`F`],
+          [`T`],  [`T`],  [`T`],
+        ),
+      )
+    ],
+
+    [
+      #align(center)[**OR**]
+
+      #simple-table(
+        (1fr, 1fr, 1.3fr),
+        (
+          [**A**], [**B**], [**A or B**],
+          [`F`], [`F`], [`F`],
+          [`F`], [`T`],  [`T`],
+          [`T`],  [`F`], [`T`],
+          [`T`],  [`T`],  [`T`],
+        ),
+      )
+    ],
+
+    [
+      #align(center)[**NOT**]
+
+      #simple-table(
+        (1fr, 1fr),
+        (
+          [**A**], [**not A**],
+          [`F`], [`T`],
+          [`T`],  [`F`],
+        ),
+      )
+    ],
+  )
+
 ]
 
-#slide(title:"Von Neumann Architecture")[
-  - It is a computer architecture in which the #alert[memory stores both data and instructions]
-  - Programs instructions and data are stored in the RAM of the system
-  - This architecture is simpler that the Harvard architecture
-  
-  #figure(image("images/von.png", width: 35%))
+#slide(title: "Conditional Execution")[
+  ```python
+  if total >= 500:
+      label = "high-value order"
+  else:
+      label = "standard order"
+
+  print(label)
+  ```
+
+  - Python evaluates the condition
+  - exactly one branch runs
+  - indentation defines the body of each branch
+  - execution continues after the conditional
 ]
 
-#slide(title:"Harvard Architecture")[
-  It is a computer architecture in which #alert[there is a separate storage and signal pathways (bus) for instructions and data]
-  
-  #figure(image("images/harvard.png", width: 45%))
+#slide(title: "Several Mutually Exclusive Cases")[
+  ```python
+  if total <= 0:
+      label = "invalid"
+  elif total >= 500:
+      label = "high value"
+  elif total >= 100:
+      label = "standard"
+  else:
+      label = "small"
+  ```
+
+  Python tests conditions from top to bottom and runs the first matching branch. The order therefore changes the result.
 ]
 
-#slide(title:"Von Neumann vs Harvard")[
-  - #alert[Recent processors use the von Neumann architecture] BUT, for performance reasons, #underline[they usually have a separate processor memories (caches) for the instructions and data]
-  - In this way they overcome the von Neumann bottleneck (a instruction fetch and a data operation cannot occur at the same time) that limit the performance of the system
-]
+#slide(title: "Exercise 2: Order Classification")[
+  #activity("12 minutes")[
+    Ask the user for an order amount with `input()` and convert it to `float`.
 
-#focus-slide[
-  How have computers evolved over time? 
-]
+    Classify it as:
+    - `invalid` when the amount is zero or negative
+    - `high value` when it is at least 500
+    - `standard` otherwise
 
-#slide(title:"Generations of computers")[
-  - We define different #alert[generations] of computers relying on the #alert[technology] used
-  - Evolution of switches is the evolution of generations
-    - #underline[Mechanical]
-    - #underline[Electromechanical]
-    - #underline[Electronics]
-  #v(3em)
-  #place(right, dy:-5.5em)[
-    #figure(image("images/hdd-big.png", width:35%))
+    Test `-10`, `0`, `499.99`, and `500`.
+
+    *Extension:* add a boolean `is_vip` and classify VIP orders of at least 250 as `priority`.
   ]
 ]
 
-#slide(title:"0th Generation: Mechanical Computers (1642-1945)")[
-  - In 1642, Blaise Pascal was the first person to build a working #alert[calculating machine]
-    - He built this calculator to help his father with taxes
-  - The programming language _Pascal_ is named in his honor
-  - The name of the calculator was Pascalina and was a sort of #alert[simple calculator]
-    - #underline[Entirely mechanical]
-    - Powered by a hand-operated crank
-    - Only addition and subtraction operations (multiplication and division through repeated additions or subtractions)
-  - Thirty years later the German mathematician von Leibniz built the #alert[Stepped Reckoner]
-    - #underline[Multiplication and division] operations added
-    - The #underline[first real calculator]
-    - First example of #underline[memory]
-  #place(right, dy:-2.5em)[
-    #figure(image("images/stepped.png", width:35%))
+#slide(title: "Exercise 2: Solution")[
+  #solution[
+    ```python
+    amount = float(input("Order amount: "))
+
+    if amount <= 0:
+        label = "invalid"
+    elif amount >= 500:
+        label = "high value"
+    else:
+        label = "standard"
+
+    print(f"Classification: {label}")
+    ```
+  ]
+
+  Boundary values deserve explicit tests because they expose incorrect comparison operators.
+]
+
+#focus-slide[Break\
+10 minutes]
+
+// ----------------------------------------------------------------------------
+// LAB PART 3: LOOPS
+// ----------------------------------------------------------------------------
+
+#focus-slide[Lab 3\
+Loops]
+
+#slide(title: "Lists and For Loops")[
+  A list stores an ordered collection of values.
+
+  ```python
+  amounts = [120.0, 75.5, 630.0, -5.0, 240.0]
+
+  for amount in amounts:
+      print(amount)
+  ```
+
+  The loop assigns each element to `amount`, runs the indented body, and then advances to the next element.
+]
+
+#slide(title: "Accumulator Pattern")[
+  A loop can update state that summarizes the elements seen so far.
+
+  ```python
+  total = 0
+
+  for amount in amounts:
+      if amount > 0:
+          total = total + amount
+
+  print(total)
+  ```
+
+  Initialize the accumulator before the loop. Updating it inside the loop preserves information across iterations.
+]
+
+#slide(title: "Range and While")[
+  #two-col(
+    [
+      `range(n)` produces integers from `0` to `n - 1`.
+
+      ```python
+      for index in range(3):
+          print(index)
+      ```
+
+      Use a `for` loop when iterating over a collection or known sequence.
+    ],
+    [
+      A `while` loop repeats while its condition remains true.
+
+      ```python
+      attempts = 3
+      while attempts > 0:
+          print(attempts)
+          attempts = attempts - 1
+      ```
+
+      The body must eventually make the condition false.
+    ],
+  )
+]
+
+#slide(title: "Exercise 3: Order Summary")[
+  #activity("15 minutes")[
+    Starting from:
+
+    ```python
+    amounts = [120.0, 75.5, 630.0, -5.0, 240.0]
+    ```
+
+    Use a loop to calculate:
+    - the total of positive amounts
+    - the number of valid amounts
+    - the number of amounts at least 500
+    - the mean of valid amounts
+
+    Ignore zero and negative values. Print a readable summary.
   ]
 ]
 
-#slide(title:"0th Generation: Mechanical Computers (1642-1945)")[
-  - In 1834 Charles Babbage built the #underline[Analytical Engine]
-    - Entirely #underline[mechanical]
-    - It was #underline[general purpose] machine, i.e. it was not specialized to perform only single operations
-    - It read instructions from#underline[ punched cards] and carried them out
-  - #alert[The programming age was born]: punching a different program on the input cards, it was possible to have the analytical engine perform different computations.
-  - To produce the (simple) software, Babbage hired a young woman named Ada Lovelace
-  - #alert[Ada Lovelace was thus the world's first computer programmer]
+#slide(title: "Exercise 3: Solution")[
+  #set text(size: 0.84em)
+  #solution[
+    ```python
+    amounts = [120.0, 75.5, 630.0, -5.0, 240.0]
+    total = 0
+    valid_count = 0
+    high_count = 0
 
-  #figure(image("images/lovelace.png", width:42%))
-]
+    for amount in amounts:
+        if amount > 0:
+            total = total + amount
+            valid_count = valid_count + 1
+            if amount >= 500:
+                high_count = high_count + 1
 
-#slide(title:"1st Generation: Vacuum Tubes (1945-1955)")[
-  - #alert[Passage from mechanic to electricity]
-  - Key problem: how to handle and memorize electrical binary signals (0/1)
-    - It is possible to perform arithmetic operations thanks to the Boolean Algebra
-    - #underline[Binary signal perfectly suits with electricity]
-      - 1 is a wire with electricity, or rather an open switch
-  - Therefore, the research focused on different types of electromechanical and electrical switches (realys, vacuum tubes, transistors, atoms, ... )
-  #figure(image("images/transistor.png", width:60%))
-]
-
-#slide(title:"1st Generation: Vacuum Tubes (1945-1955)")[
-  - The main stimulus for the electronic 1st generation computers was #underline[World War II]
-    - Goal: decode German messages produced by the ENIGMA 
-    - Solution: the British government set up a top secret laboratory that built an electronic computer
-    - The name was Colossus, projected by Alan Turing in 1944
-      - Based on vacuum tubes
-      - It was a general purpose calculator
-
-  #figure(image("images/turing.png", width:60%))
-]
-
-#slide(title:"1st Generation: Vacuum Tubes (1945-1955)")[
-  - #alert[ENIAC] (Electronic Numerical Integrator and Computer)
-    - Built in 1946 in USA, to compute range tables for heavy artillery
-    - It was the first real #underline[programmable, electronic, general-purpose digital computer]
-    - 30 tons and consumed 140 kW of power
-    - 18k vacuum tubes and 1.5k relays
-  - #alert[IAS] (Institute for Advanced Study) machines
-    - Built in Princeton (USA) in 1951
-    - Also known as #underline[Neumann Machine], since for the first time data and instructions were stored in the memory
-    - Before that, the programmers have to set all the switches and cables to program the computer, since the program was not stored in memory
-]
-
-#slide(title:"Bugs")[
-  - Problems with the high number of vacuum tubes:
-    - #alert[Malfunctions] (vacuum tubes are easily broken)
-    - #alert[Heat dissipation], that requires the use of air conditioning in the computers' rooms
-    - #alert[NB] Also today the heat dissipation is a key element in data centers and server rooms, since this aspect is related to the power consumption and failure prevention (a GPU can reach up to 90 - 100°C at a full load)
-  - The use of the term #alert[“bug”] to describe #alert[software errors] is common
-  - The term derives from the fact that in 1946 operators traced an error in the Mark II to a #alert[moth trapped in a relay], coining the term bugs
-  - Thus, #alert[debugging] is the process of finding and resolving bugs within computer programs, software, or systems
-]
-
-#slide(title:"2nd Generation: Transistors (1955-1965)")[
-  - 1948: _John Bardeen, Walter Brattain, and William Shockley_ invented the #alert[transistor] in Bell Labs
-  - They were awarded the 1956 Nobel Prize in physics
-  - Transistor vs Vacuum Tube
-    - Transistors are much #underline[more durable]
-    - Transistors are much #underline[smaller]
-    - Transistors require much #underline[less voltage] to function
-
-  #place(right, dy:-4.5em)[ #figure(image("images/trans.jpg", width:30%)) ]
-]
-
-#slide(title:"2nd Generation: Transistors (1955-1965)")[
-  - #alert[ PDP-1] (1960): on its screen, MIT students programmed the first computer game (Spacewar)
-  #figure(image("images/pdp.png", width:70%))
-  - #alert[Olivetti]: italian company leader in the computer market in '60s 
-    - #alert[Programma-101]: first programmable #alert[desktop] computer (also used by NASA for the Apollo program!)
-  #place(right, dy:-0.5em)[ #figure(image("images/programma.jpg", width:20%)) ]
-]
-
-#slide(title:"3rd Generation: Integrated Circuits (1965-1980)")[
-  - This generation is still based on transistors, but now they are “organized” in a circuits with a #alert[large amount] of them (#alert[Integrated Circuits], ICs)
-  - #alert[Silicon Integrated Circuits]
-    - Dozens of transistors put on a single chip
-  - IC made it possible to build computers that were: 
-    - #underline[Smaller]
-    - #underline[Faster]
-    - #underline[Cheaper]
-  #place(right, dy:-3.5em)[ #figure(image("images/ic.jpg", width:35%)) ]
-]
-
-#slide(title:"3rd Generation: Integrated Circuits (1965-1980)")[
-  - #alert[IBM 360] (1964): used new integrated circuit technology 
-    - Introduces the paradigm of #alert[multiprogramming]: several programs are stored in memory, so when one was waiting for input/output to complete, another could compute 
-    - Therefore, #underline[CPU utilization is improved]
-  
-  #figure(image("images/ibm360.png", width:35%))
-]
-
-#slide(title:"4th Generation: Very Large Scale Integration (1980-?)")[
-  - 1971: the italian _Federico Faggin_ created the first #underline[microprocessor], the Intel 4004
-  - #underline[Millions] (not dozen) of transistors on a single chip. This development soon led to #underline[smaller] and #underline[faster] computer: the beginning of the #alert[Personal Computer (PC)] era
-  #figure(image("images/faggin.png", width:55%))
-
-  #components.side-by-side(columns: (1fr, 1fr), gutter: 0em)[
-    - #alert[IBM 5150] (IBM PC - 1981)
-    - Operating System: MD-DOS (developed by a small company owned by _Bill Gates_…)
-  ][
-    #figure(image("images/bill.png", width:50%))
+    mean = total / valid_count
+    print(f"Total: €{total:.2f}, mean: €{mean:.2f}")
+    print(f"High-value orders: {high_count}")
+    ```
   ]
 ]
 
-#slide(title:"5th Generation: Invisible Computers")[
-  - The real fifth generation is more a #alert[paradigm shift] than a specific new architecture
-  - We can refer to this generation also with _Ubiquitous Computing_ or _Pervasive Computing_
-  - rather than having a _small number of very powerful computing devices_ in your life (laptops, tablets, phones, music players and so on), you might have a _large number of smart devices_ which are perhaps less powerful (“simpler”)
-  #figure(image("images/iot.png", width:35%))
+// ----------------------------------------------------------------------------
+// LAB PART 4: COLLECTIONS
+// ----------------------------------------------------------------------------
+
+#focus-slide[Lab 4\
+Collections]
+
+#slide(title: "Lists")[
+  Lists are ordered, mutable, and allow duplicate values.
+
+  ```python
+  amounts = [120.0, 75.5, 630.0]
+
+  first = amounts[0]
+  amounts.append(240.0)
+  count = len(amounts)
+  largest = max(amounts)
+  total = sum(amounts)
+  ```
+
+  Indices start at `0`. An invalid index raises `IndexError`.
 ]
 
-#focus-slide[
-  How can we communicate with a computer?
+#slide(title: "Dictionaries, Sets, and Strings")[
+  #set text(size: 0.86em)
+  #simple-table(
+    (1fr, 1.5fr, 1.9fr),
+    (
+      [*Structure*], [*Main idea*], [*Example*],
+      [Dictionary], [Unique keys associated with values], [`{"total": 1065.5, "count": 4}`],
+      [Set], [Unique elements with no order to rely on], [`{"standard", "high value"}`],
+      [String], [Immutable sequence of Unicode characters], [`"sensor"[0]` gives `"s"`],
+    ),
+  )
+
+  Choose a structure based on how the program needs to access and update the information.
 ]
 
-#slide(title:"Communicating with computers")[
-  - #underline[Computers understand only the machine language] (a sequence of binary symbols 0 and 1)- 
-  - Why? Simplifying, with the machine language we are #underline[turning on/off] the circuits and functional units inside the circuits of a compute
+#slide(title: "A Record as a Dictionary")[
+  ```python
+  order = {
+      "product": "wireless sensor",
+      "amount": 598.80,
+      "customer": "ACME",
+      "paid": True,
+  }
 
-  #figure(image("images/communication.png", width:45%))
+  print(order["amount"])
+  order["paid"] = False
+  ```
+
+  A dictionary groups fields that describe one entity. A list of dictionaries can represent several records.
 ]
 
-#slide(title:"Machine language")[
-  - #alert[Machine Language:] a set of #underline[instructions directly executed by the hardware]
-    - Machine language is a (very) #underline[low-level programming language], that generally consists of numbers, i.e. the binary code
-    -  The execution is #underline[extremely fast], but the instruction set is limited due to cost and complexity
-    - Unfortunately, the #alert[machine language is really hard for humans]
+#slide(title: "Collection Practice")[
+  #activity("8 minutes")[
+    Build a `summary` dictionary from Exercise 3 with these keys:
 
-    #figure(image("images/machinelanguage.png", width:30%))
+    ```text
+    total, valid_count, high_count, mean
+    ```
+
+    Print the mean using the dictionary. Then create a set from:
+
+    ```python
+    labels = ["standard", "high value", "standard"]
+    ```
+
+    How many unique labels remain?
+  ]
 ]
 
-#slide(title:"Machine Language")[
-  - The #alert[first generation of software] (late 1940s) had its #underline[instructions written directly in machine language]
-  -  Unfortunately, #alert[programming in machine language is extremely difficult], especially when programs become more complex
-  - A #alert[solution] for the machine language complexity can be represented by the use of an #alert[intermediate language] that is #alert[comprehensible by humans]
-  - Then, we have to #alert[translate this new language] into the machine language
+#slide(title: "Collection Practice: Solution")[
+  #solution[
+    ```python
+    summary = {
+        "total": total,
+        "valid_count": valid_count,
+        "high_count": high_count,
+        "mean": mean,
+    }
+
+    print(f"Mean: €{summary['mean']:.2f}")
+
+    labels = ["standard", "high value", "standard"]
+    unique_labels = set(labels)
+    print(len(unique_labels))  # 2
+    ```
+  ]
 ]
 
-#slide(title:"Machine Language conversion")[
-  #align(center)[ The same happens with #alert[humans] ]
+// ----------------------------------------------------------------------------
+// LAB PART 5: FUNCTIONS
+// ----------------------------------------------------------------------------
 
-  #figure(image("images/translation.png", width:75%))
+#focus-slide[Lab 5\
+Functions]
+
+#slide(title: "Defining and Calling a Function")[
+  ```python
+  def classify_order(amount):
+      if amount <= 0:
+          return "invalid"
+      elif amount >= 500:
+          return "high value"
+      else:
+          return "standard"
+
+  label = classify_order(630.0)
+  print(label)
+  ```
+
+  The definition creates the function. A call executes its body with a specific argument.
 ]
 
-#slide(title:"Assembly Language")[
-  - One of the first solutions is to use the #alert[assembly language]
-  - Indeed, in assembly language instructions can be represented with the help of #alert[mnemonics] (such as mov, add, sub, end. ...) that are #alert[human-readable commands]
+#slide(title: "Parameters, Arguments, and Return Values")[
+  #simple-table(
+    (1.15fr, 2.7fr),
+    (
+      [*Term*], [*Meaning*],
+      [Parameter], [Name used by the function definition, such as `amount`],
+      [Argument], [Value supplied by a call, such as `630.0`],
+      [Return value], [Result sent back to the caller],
+      [Local variable], [Name created inside the function and unavailable outside it],
+    ),
+  )
 
-  #figure(image("images/assembly.png", width:40%))
-
-  - Unfortunately, #alert[also the assembly language became hard to be used] by programmers to write more and more complex programs
+  A clear function has a small purpose and a predictable interface.
 ]
 
-#slide(title:"Assembly Language")[
-  - Why? Because having a more human-friendly language #alert[we started to build more complex systems] which however required even more friendly languages
-  - The solution is to create #alert[a new “easier” language] (L1) and a «translator» to translate the easier language to the assembly (or machine) language (L0). L1 will be runned on a sort of #alert[Virtual Machine] (e.g., Java Virtual Machine)
+#slide(title: "Print and Return")[
+  #two-col(
+    [
+      `print(...)` displays text for a person.
+
+      ```python
+      def show_total(total):
+          print(total)
+      ```
+
+      The displayed text is not automatically available for another calculation.
+    ],
+    [
+      `return` sends a value to the caller.
+
+      ```python
+      def add_tax(price, tax):
+          return price + tax
+      ```
+
+      The caller can store, print, compare, or combine the returned value.
+    ],
+  )
 ]
 
-#slide(title:"Multilevel Machines")[
-  #align(center)[This solution can be #alert[repeated] again to create #alert[new higher-level languages] easier for humans and with respect to the application to be developed]
+#slide(title: "Final Exercise: Summarize Orders")[
+  #activity("18 minutes")[
+    Write a function:
 
-  #figure(image("images/multilevel.png", width:80%))
+    ```python
+    summarize(amounts, threshold)
+    ```
+
+    It must ignore non-positive amounts and return a dictionary containing:
+    - `total`
+    - `valid_count`
+    - `mean`
+    - `high_count`
+
+    When no valid amounts exist, use `None` for the mean. Test at least two lists, including one with no valid values.
+  ]
 ]
 
-#slide(title:"Compilers vs Interpreters")[
-  - There are two types of translators: #alert[compilers] and #alert[intepreters]
-  - Both compiler and interpreters #alert[do the same job] which is converting higher level programming languages to lower logical levels
-  - However, there are some differences:
-    - #alert[Compiler]: converts the code into machine code before program run
-    - #alert[Interpreter]: convert code into machine code when the program is running (a sort of “simultaneous translation”)
-  - Compiler vs Interpreter
-    - Compiled code #underline[runs faster], since can be better optimized for a specific architecture
-    - Interpreted code runs slower but has a #underline[better portability]
+#slide(title: "Final Exercise: Core Logic")[
+  #set text(size: 0.82em)
+  #solution[
+    ```python
+    def summarize(amounts, threshold):
+        total = 0
+        valid_count = 0
+        high_count = 0
 
+        for amount in amounts:
+            if amount > 0:
+                total = total + amount
+                valid_count = valid_count + 1
+                if amount >= threshold:
+                    high_count = high_count + 1
+
+        if valid_count == 0:
+            mean = None
+        else:
+            mean = total / valid_count
+    ```
+  ]
 ]
 
-#slide(title:"Compilers vs Interpreters")[
-  #figure(image("images/com-inter.png", width:80%))
+#slide(title: "Final Exercise: Result and Tests")[
+  #set text(size: 0.84em)
+  #solution[
+    Complete the function with:
+
+    ```python
+        return {
+            "total": total,
+            "valid_count": valid_count,
+            "mean": mean,
+            "high_count": high_count,
+        }
+    ```
+
+    Then test it:
+
+    ```python
+    amounts = [120.0, 75.5, 630.0, -5.0, 240.0]
+    result = summarize(amounts, 500)
+    print(result)
+
+    empty_result = summarize([-4.0, 0.0], 500)
+    print(empty_result)
+    ```
+  ]
 ]
 
-#focus-slide[
-  Operating Systems
-]
+#slide(title: "Laboratory Recap")[
+  The program now combines the main building blocks:
 
-#slide(title:"Introduction")[
-  - #alert[Operating systems] (OS) are one of the most essential components of modern computers
-  - They #alert[manage computer hardware and software resources], and provide services for computer programs
-  - Without an OS, a computer cannot function efficiently
-]
+  - values and names represent state
+  - expressions calculate new values
+  - conditions select a branch
+  - loops repeat work across a collection
+  - dictionaries organize a result
+  - functions package a reusable procedure
 
-#slide(title:"What is an OS?")[
-  - An operating system is software #alert[that acts as an intermediary] between computer hardware and users
-  - It #alert[manages hardware components] such as the CPU, memory, and input/output devices, ensuring they are used efficiently
-  - it allows users to interact with the computer through user interfaces such as command-line interfaces (CLI) or graphical user interfaces (GUI)
-  - Examples of operating systems include Windows, macOS, Linux, Android, and iOS
-]
-
-#slide(title:"Main Functions of an OS")[
-  - #alert[Process Management:] It manages the execution of processes, schedules tasks, and handles multitasking.
-  - #alert[Memory Management:] It allocates and deallocates memory spaces as needed by different programs and processes
-  - #alert[File System Management:] It organizes, stores, retrieves, and manages data in files on storage devices
-  - #alert[Device Management:] It manages input and output devices such as keyboards, printers, and monitors
-  - #alert[Security and Protection:] The OS ensures the integrity and confidentiality of data by managing access permissions and protecting the system from external threats
-]
-
-#slide(title:"Types of OS")[
-  - There are several types of operating systems designed for different purposes:
-    - #alert[Desktop Operating Systems:] Used on personal computers. Examples include Windows, macOS, and Linux
-    - #alert[Mobile Operating Systems:] Designed for smartphones and tablets. Examples are Android and iOS
-    - #alert[Embedded Operating Systems:] Found in devices like cars, appliances, and industrial machines, often with real-time processing needs
-    - #alert[Real-Time Operating Systems (RTOS):] Provide immediate processing for applications that require quick responses, such as medical systems or aircraft controls
-    - #alert[Network Operating Systems:] Manage and coordinate network resources, commonly used in servers and data centers
-]
-
-#slide(title:"Architecture of an OS")[
-  - The architecture of an operating system is typically divided into layers:
-    - #alert[Kernel:] it manages the system hardware and acts as a bridge between the hardware and application layers. It controls low-level tasks like memory management, process scheduling, and device I/O
-      - #alert[Monolithic Kernel]: Large and complex, with many functions built into the kernel itself (e.g., Linux)
-      - #alert[Microkernel:] Minimalist design where only essential services run in the kernel, with other services running in user space (e.g., Minix)
-  - #alert[User Space:] This includes everything outside the kernel, where user applications and processes run. The user interacts with the operating system through interfaces provided in this space
-]
-
-#slide(title:"Process Management")[
-  - #alert[A process is an instance of a program in execution]. The OS is responsible for managing processes in the following ways:
-    - #alert[Process Scheduling:] Determines the order in which processes are executed. Common algorithms include:
-      - #alert[First Come First Served (FCFS):] Processes are executed in the order they arrive
-      - #alert[Round-Robin (RR):] Each process gets a fixed time slice to execute
-      - #alert[Priority Scheduling:] Processes with higher priorities are executed before lower-priority ones
-    - #alert[Creation and Termination:] The OS creates processes through system calls and terminates them once completed
-    - #alert[Multitasking and Concurrency:] The OS can switch between multiple processes, giving the illusion of parallel execution on single-core systems, or actual parallelism on multi-core systems
-]
-
-#slide(title:"Disclaimer")[
-  Most of the slides are based on the slides of prof. Guido Borghi
+  #v(0.6em)
+  #callout[The next step is practice: change the data, test boundary cases, read each error, and explain why the program behaves as it does.]
 ]
