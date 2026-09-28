@@ -249,7 +249,8 @@ Why Computers and Programming?]
 Hardware and Information]
 
 #slide(title: "A Computer Seen From the Outside")[
-  #placeholder("input, processing, output, and storage around a laptop, including keyboard, file, network, screen, and saved file", height: 8em)
+
+  #figure(image("images/interaction.pdf", width: 75%))
 
   - *Input* brings information into the system
   - *Processing* transforms the information according to instructions
@@ -260,35 +261,9 @@ Hardware and Information]
 ]
 
 #slide(title: "Layers of a Computer System")[
-  #placeholder("vertical stack with electronics, hardware components, operating system, language runtime, application, and user", height: 9em)
+  #figure(image("images/stack-arc.svg", width: 35%))
 
   Each layer exposes a simpler interface and hides details below it. These abstractions let us build applications without controlling individual electrical signals.
-]
-
-#slide(title: "Components Working Together")[
-  #two-col(
-    [
-      - The *CPU* executes instructions
-      - *RAM* holds active instructions and data
-      - *Storage* keeps programs and files
-      - The *GPU* performs many similar calculations in parallel
-      - Input, output, and network devices connect the machine to its environment
-    ],
-    [#placeholder("open desktop computer with CPU, RAM, SSD, GPU, motherboard, power supply, and ports labelled", height: 9em)],
-  )
-]
-
-#slide(title: "The Motherboard")[
-  #two-col(
-    [
-      The motherboard provides the physical and electrical connections among components.
-
-      It contains sockets, memory slots, data links, controllers, and connectors. It also distributes power and carries timing and control signals.
-
-      The motherboard coordinates communication. It does not perform all computation itself.
-    ],
-    [#placeholder("annotated motherboard with CPU socket, RAM slots, storage connector, GPU slot, and external ports", height: 9.5em)],
-  )
 ]
 
 #slide(title: "Information Needs a Representation")[
@@ -326,16 +301,6 @@ Hardware and Information]
   )
 ]
 
-#slide(title: "Binary Place Values")[
-  #placeholder("four binary columns labelled 8, 4, 2, 1, with 1011 producing 11", height: 7em)
-
-  ```text
-  1011₂ = 1×8 + 0×4 + 1×2 + 1×1
-         = 11₁₀
-  ```
-
-  Binary uses positional notation like decimal, but every position represents a power of 2.
-]
 
 #slide(title: "Decimal to Binary")[
   Repeated division by 2 exposes the binary digits.
@@ -355,21 +320,10 @@ Hardware and Information]
   Read the remainders from bottom to top: `13₁₀ = 1101₂`.
 ]
 
-#slide(title: "Binary Check")[
-  #activity("3 minutes")[
-    + Convert `10₁₀` to binary
-    + Convert `10110₂` to decimal
-    + Find the largest unsigned value that fits in four bits
-  ]
 
-  #v(0.5em)
-  Answers: `1010₂`, `22₁₀`, and `15`.
-]
-
-#slide(title: "ASCII and Unicode")[
+#slide(title: "ASCII table")[
   #two-col(
     [
-      *ASCII*
 
       The original ASCII standard assigns numbers from 0 to 127 to letters, digits, punctuation, and control characters.
 
@@ -379,27 +333,20 @@ Hardware and Information]
       ```
     ],
     [
-      *Unicode and UTF-8*
-
-      Unicode assigns code points to characters across many writing systems. UTF-8 encodes those code points as one or more bytes.
-
-      One byte does not always equal one character.
+      #figure(image("images/ascii.jpg", width: 100%))
     ],
   )
 ]
 
 #slide(title: "Logical Bits and Electrical Signals")[
-  #two-col(
-    [
-      A bit is an abstract logical state. Digital circuits often represent it with voltage ranges:
+  
+    A bit is an abstract logical state. Digital circuits often represent it with voltage ranges:
 
-      - a low range means logical `0`
-      - a high range means logical `1`
+    - a low range means logical `0`
+    - a high range means logical `1`
 
-      Ranges provide tolerance against small amounts of electrical noise.
-    ],
-    [#placeholder("voltage axis with low range, undefined transition region, and high range", height: 8.5em)],
-  )
+    Ranges provide tolerance against small amounts of electrical noise.
+  
 ]
 
 #slide(title: "Transistors and Logic")[
@@ -411,24 +358,85 @@ Hardware and Information]
 
       Software eventually causes physical signals to move through these circuits.
     ],
-    [#placeholder("transistor as a switch beside simple NOT and AND gates", height: 9em)],
+    [
+      #figure(image("images/trans.jpg", width: 100%))
+    ],
   )
 ]
 
-// Source: Nappa, Hobbs, and Lanzi, arXiv:2105.05103. Belgian 2003 expert report cited there.
-#slide(title: "A Bit Flip With 4,096 Consequences")[
-  #two-col(
+#slide(title: "Boolean Logic: Truth Tables")[
+  #grid(
+    columns: (1fr, 1fr, 0.8fr),
+    gutter: 1em,
+
     [
-      During the 2003 Belgian election, an electronic tally in Schaerbeek gave one candidate 4,096 extra preference votes.
+      #align(center)[**AND**]
 
-      `4,096 = 2¹²`, which matches changing one binary position from 0 to 1.
-
-      The expert report described a probable random bit inversion in memory. The precise physical cause was not proven.
+      #simple-table(
+        (1fr, 1fr, 2fr),
+        (
+          [**A**], [**B**], [**A and B**],
+          [`F`], [`F`], [`F`],
+          [`F`], [`T`],  [`F`],
+          [`T`],  [`F`], [`F`],
+          [`T`],  [`T`],  [`T`],
+        ),
+      )
     ],
-    [#placeholder("vote count before and after one highlighted bit flips, changing the value by 4096", height: 9em)],
+
+    [
+      #align(center)[**OR**]
+
+      #simple-table(
+        (1fr, 1fr, 2fr),
+        (
+          [**A**], [**B**], [**A or B**],
+          [`F`], [`F`], [`F`],
+          [`F`], [`T`],  [`T`],
+          [`T`],  [`F`], [`T`],
+          [`T`],  [`T`],  [`T`],
+        ),
+      )
+    ],
+
+    [
+      #align(center)[**NOT**]
+
+      #simple-table(
+        (1fr, 1fr),
+        (
+          [**A**], [**not A**],
+          [`F`], [`T`],
+          [`T`],  [`F`],
+        ),
+      )
+    ],
   )
 
-  #source-note[#link("https://arxiv.org/abs/2105.05103")[Nappa et al., “Deja-Vu,” 2021, arXiv:2105.05103]]
+]
+
+
+// Source: Nappa, Hobbs, and Lanzi, arXiv:2105.05103. Belgian 2003 expert report cited there.
+#slide(title: "A Bit Flip With 4,096 Consequences")[
+ 
+  During the *2003 Belgian election*, an electronic tally in Schaerbeek gave one candidate 4,096 extra preference votes.
+
+  `4,096 = 2¹²`, which matches *changing one binary position from 0 to 1*.
+]
+
+
+#slide(title: "Components Working Together")[
+  #two-col(
+    [
+      - The *CPU* executes instructions
+      - *RAM* holds active instructions and data
+      - *Storage* keeps programs and files
+      - The *GPU* performs many similar calculations in parallel
+      - Input, output, and network devices connect the machine to its environment
+    ],
+    [
+    #figure(image("images/open-pc-computer-case.jpg", width: 95%))],
+  )
 ]
 
 #slide(title: "The Stored-Program Abstraction")[
@@ -443,10 +451,27 @@ Hardware and Information]
 ]
 
 #slide(title: "A Simplified Computer Architecture")[
-  #placeholder("stored-program architecture with CPU, memory, input/output, and persistent storage, with instructions and data labelled in memory", height: 9em)
+  #figure(image("images/Von_Neumann_Architecture.svg", width: 45%))
 
   The diagram is an abstraction, not a literal map of a modern chip. Its value comes from showing the roles and communication among components.
 ]
+
+
+#slide(title: "The Motherboard")[
+  #two-col(
+    [
+      The motherboard provides the physical and electrical connections among components.
+
+      It contains sockets, memory slots, data links, controllers, and connectors. It also distributes power and carries timing and control signals.
+
+     *The motherboard coordinates communication. It does not perform all computation itself.*
+    ],
+    [
+      #figure(image("images/motherboard.jpg", width: 100%))
+    ],
+  )
+]
+
 
 #slide(title: "The CPU")[
   #two-col(
@@ -458,12 +483,11 @@ Hardware and Information]
 
       A modern CPU may contain several cores.
     ],
-    [#placeholder("simplified CPU with control unit, arithmetic logic unit, registers, cache, and multiple cores", height: 9em)],
+    [#figure(image("images/cpus.png", width: 95%))],
   )
 ]
 
 #slide(title: "Fetch, Decode, Execute")[
-  #placeholder("cycle with four stages: fetch instruction, decode operation, execute, store result", height: 7.5em)
 
   The CPU repeatedly:
   + fetches an instruction from memory
@@ -471,7 +495,8 @@ Hardware and Information]
   + executes the operation
   + stores the result and selects the next instruction
 
-  Real processors overlap and reorder work, but this simplified cycle remains a useful model.
+  #figure(image("images/cpu-cycle.png", width: 95%))
+
 ]
 
 #slide(title: "RAM, Storage, and Firmware")[
@@ -499,38 +524,18 @@ Hardware and Information]
 
       A CPU remains better suited to many irregular, sequential, or control-heavy tasks.
     ],
-    [#placeholder("CPU with a few powerful cores compared with GPU containing many smaller parallel units", height: 9em)],
+    [#figure(image("images/gpu.jpeg", width: 95%))],
   )
 ]
-
-#slide(title: "Opening an Application")[
-  #placeholder("program files on storage, operating system creating a process, code and data in RAM, CPU executing instructions, output on screen", height: 8.5em)
-
-  + Program files already exist on persistent storage
-  + The operating system creates a process and maps the required code and data into memory
-  + The CPU executes instructions from that process
-  + The application requests files, devices, network access, and screen output through the operating system
-]
-
-#focus-slide[Break\
-10 minutes]
-
-// ----------------------------------------------------------------------------
-// PART 3: OPERATING SYSTEMS
-// ----------------------------------------------------------------------------
 
 #focus-slide[Part 3\
 Operating Systems]
 
 #slide(title: "The Problem an Operating System Solves")[
-  #two-col(
-    [
-      A computer contains different processors, memories, devices, and communication links.
 
-      Without a common manager, every application would need to control each device directly and negotiate resource use with every other application.
-    ],
-    [#placeholder("applications competing for CPU, memory, disk, display, and network, followed by an OS mediating access", height: 9em)],
-  )
+    A computer contains different processors, memories, devices, and communication links.
+
+    Without a *common manager*, every application would need to control each device directly and negotiate resource use with every other application.
 ]
 
 #slide(title: "A Layer of Abstraction")[
@@ -635,21 +640,16 @@ Operating Systems]
   #two-col(
     [
       The file system gives stored bytes a logical structure:
-      - files have names and metadata
-      - directories group files and other directories
-      - paths identify locations
-      - permissions restrict access
+      - files have *names* and *metadata*
+      - directories *group* files and other directories
+      - paths *identify* locations
+      - permissions *restrict* access
 
       The file system is an operating-system abstraction over storage devices.
     ],
-    [#placeholder("directory tree with project, data, src, report.py, and orders.csv", height: 9em)],
+    [#figure(image("images/file-system.jpg", width: 95%))],
   )
-]
-
-#slide(title: "File System pt.2")[
-
-  qui slide con gli alberi di come sono organizzati diversamente i FS in linux/windows
-]
+] 
 
 #slide(title: "Absolute and Relative Paths")[
   #two-col(
@@ -684,7 +684,7 @@ Operating Systems]
 Algorithms and Programming Languages]
 
 #slide(title: "Algorithms")[
-  An algorithm is a finite and unambiguous procedure that transforms valid input into a result or observable effect.
+  An algorithm is a *finite* and *unambiguous* procedure that transforms valid input into a result or observable effect.
 
   A useful algorithm states:
   - what input it expects
@@ -696,32 +696,39 @@ Algorithms and Programming Languages]
 ]
 
 #slide(title: "Natural Language Can Be Ambiguous")[
-  Consider this instruction:
+  Consider this rule for an online store:
 
-  #align(center)[_“Take the largest value and divide it by two if it is positive.”_]
+  #align(center)[
+    _“Give free shipping to premium customers or students who spend more than €50.”_
+  ]
 
-  Questions appear immediately:
-  - What happens if the collection is empty?
-  - What happens when several values share the maximum?
-  - Does “it” refer to the value or the result?
-  - What should happen when the maximum is zero or negative?
+  This sentence has at least two possible interpretations:
 
-  Humans use context to resolve ambiguity. Computers need explicit rules.
+  - *Interpretation A:* premium customers always receive free shipping; students receive it only when they spend more than €50.
+  - *Interpretation B:* both premium customers and students must spend more than €50.
+
+  Consider a *premium customer* who spends *€20*:
+
+  - Interpretation A says: *free shipping*
+  - Interpretation B says: *no free shipping*
+
+  The same sentence produces two different decisions.
 ]
 
 #slide(title: "A More Precise Procedure")[
+  Suppose we choose the first interpretation:
+
   ```text
-  input: a non-empty collection of numbers
+  input: customer type and order total
 
-  largest = maximum value in the collection
-
-  if largest > 0:
-      output largest / 2
+  if customer is premium:
+      give free shipping
+  otherwise, if customer is a student
+                and order total > €50:
+      give free shipping
   otherwise:
-      output largest
-  ```
-
-  The procedure now defines its input, condition, branches, and output.
+      charge for shipping
+   ```
 ]
 
 #slide(title: "Pseudocode and Source Code")[
@@ -759,6 +766,68 @@ Algorithms and Programming Languages]
 
   Formal rules allow tools to translate and execute programs consistently.
 ]
+
+#slide(title: "One Algorithm, Different Languages")[
+  The same idea can be expressed using different abstractions and syntax:
+
+  #align(center)[
+    ```text
+    for each order:
+        add its amount to total
+    ```
+  ]
+
+  #v(0.4em)
+
+  #grid(
+    columns: (1fr, 1fr, 1fr),
+    gutter: 0.8em,
+
+    [
+      #align(center)[
+        #text(fill: rgb("#ed7d1a"), weight: "bold")[Python]
+      ]
+
+      ```python
+      total = 0
+
+      for order in orders:
+          total += order
+      ```
+    ],
+
+    [
+      #align(center)[
+        #text(fill: rgb("#ed7d1a"), weight: "bold")[Kotlin]
+      ]
+
+      ```kotlin
+      var total = 0
+
+      for (order in orders) {
+          total += order
+      }
+      ```
+    ],
+
+    [
+      #align(center)[
+        #text(fill: rgb("#ed7d1a"), weight: "bold")[C]
+      ]
+
+      ```c
+      int total = 0;
+
+      for (int i = 0; i < n; i++) {
+          total += orders[i];
+      }
+      ```
+    ],
+  )
+
+]
+
+
 
 #slide(title: "Why Many Languages Exist")[
   #set text(size: 0.88em)
