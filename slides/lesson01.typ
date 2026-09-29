@@ -847,7 +847,9 @@ Algorithms and Programming Languages]
 ]
 
 #slide(title: "Levels of Abstraction")[
-  #placeholder("ladder with machine code, assembly, C, and Python, showing increasing abstraction and decreasing direct hardware control", height: 9em)
+
+  #figure(image("images/image-2.png", width: 95%))
+  
 
   Higher-level languages hide more machine detail and offer concepts closer to the problem. Lower-level languages expose more control over hardware and memory.
 ]
