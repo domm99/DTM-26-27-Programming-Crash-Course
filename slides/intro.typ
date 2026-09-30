@@ -57,16 +57,6 @@
 
 // #new-section-slide("Slide section 1")
 
-#slide(title: "Who am I?")[
-
-  - Bachelor and Master Degree in #alert[Computer Science and Engineering] at University of Bologna
-  - Currently #alert[PhD Student] in Computer Science and Engineering at University of Bologna (almost finished)
-  - #alert[Teaching tutor] for Software Engineering stuff in the DTM master course
-  - If you have any question write me at: `davide.domini@unibo.it`
-
-]
-
-
 #slide(title: "Why this course?")[
   - In the first year you'll have a lot of #alert[CS courses] (programming and computer architectures, OS, cybersecurity, DB, ...)
   - This crash course #alert[is NOT a replacement] for those courses

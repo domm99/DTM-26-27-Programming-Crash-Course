@@ -364,62 +364,13 @@ Hardware and Information]
   )
 ]
 
-#slide(title: "Boolean Logic: Truth Tables")[
-  #grid(
-    columns: (1fr, 1fr, 0.8fr),
-    gutter: 1em,
-
-    [
-      #align(center)[**AND**]
-
-      #simple-table(
-        (1fr, 1fr, 2fr),
-        (
-          [**A**], [**B**], [**A and B**],
-          [`F`], [`F`], [`F`],
-          [`F`], [`T`],  [`F`],
-          [`T`],  [`F`], [`F`],
-          [`T`],  [`T`],  [`T`],
-        ),
-      )
-    ],
-
-    [
-      #align(center)[**OR**]
-
-      #simple-table(
-        (1fr, 1fr, 2fr),
-        (
-          [**A**], [**B**], [**A or B**],
-          [`F`], [`F`], [`F`],
-          [`F`], [`T`],  [`T`],
-          [`T`],  [`F`], [`T`],
-          [`T`],  [`T`],  [`T`],
-        ),
-      )
-    ],
-
-    [
-      #align(center)[**NOT**]
-
-      #simple-table(
-        (1fr, 1fr),
-        (
-          [**A**], [**not A**],
-          [`F`], [`T`],
-          [`T`],  [`F`],
-        ),
-      )
-    ],
-  )
-
-]
-
 
 // Source: Nappa, Hobbs, and Lanzi, arXiv:2105.05103. Belgian 2003 expert report cited there.
 #slide(title: "A Bit Flip With 4,096 Consequences")[
  
-  During the *2003 Belgian election*, an electronic tally in Schaerbeek gave one candidate 4,096 extra preference votes.
+  During the 2003 Belgian election, an electronic vote-counting system in Schaerbeek gave one candidate 4,096 extra preference votes.
+
+  The most likely explanation is that ionizing radiation, possibly from a cosmic ray, *flipped* a single bit in the computer's memory.
 
   `4,096 = 2¹²`, which matches *changing one binary position from 0 to 1*.
 ]
@@ -513,6 +464,10 @@ Hardware and Information]
 
   #v(0.5em)
   Modern firmware commonly lives in rewritable flash memory. “ROM” remains a useful historical label, but the storage may not be literally read-only.
+]
+
+#slide(title: "Memories")[
+  #figure(image("images/memory.png", width: 45%))
 ]
 
 #slide(title: "The GPU")[
@@ -827,8 +782,6 @@ Algorithms and Programming Languages]
 
 ]
 
-
-
 #slide(title: "Why Many Languages Exist")[
   #set text(size: 0.88em)
   #simple-table(
@@ -848,8 +801,7 @@ Algorithms and Programming Languages]
 
 #slide(title: "Levels of Abstraction")[
 
-  #figure(image("images/image-2.png", width: 95%))
-  
+  #figure(image("/assets/image-2.png", width: 55%))
 
   Higher-level languages hide more machine detail and offer concepts closer to the problem. Lower-level languages expose more control over hardware and memory.
 ]
@@ -870,35 +822,49 @@ Algorithms and Programming Languages]
   One high-level statement may expand into many instructions. The precise expansion depends on the implementation and processor.
 ]
 
-#slide(title: "The Translation Chain")[
-  #placeholder("source code, translator, intermediate or machine representation, operating system, CPU", height: 8.5em)
+#slide(title: "An Example of Machine Code")[
+  #figure(image("images/machinelanguage.png", width: 80%))
+]
 
+#slide(title: "One Step of Abstraction")[
+  #figure(image("images/assembly.png", width: 85%))
+
+  This may seem outdated, but many embedded and IoT systems (such as heat-pump controllers) still require programmers to know how hardware registers work and exactly where each piece of information must be stored.
+
+]
+
+#slide(title: "The Translation Chain")[
   The programmer writes source code. Translators and runtimes convert that code into operations supported by the execution environment. The CPU ultimately executes machine instructions.
 ]
+
+#slide(title: "Two Steps of Abstraction")[
+  #figure(image("/assets/image-3.png", width: 90%))
+]
+
 
 #slide(title: "Compiler")[
   #two-col(
     [
-      A compiler analyzes source code and produces another representation before the program runs.
+      A compiler *analyzes* source code and produces another representation *before* the program runs.
 
       The output may be native machine code or an intermediate form such as bytecode.
 
-      Translation happens once per build, while the result may run many times.
+      Translation happens *once per build*, while the result may run many times.
     ],
-    [#placeholder("translator finishing an entire book before readers receive the translated edition", height: 8.5em)],
+    [#image("/assets/image-5.png")],
   )
 ]
 
 #slide(title: "Interpreter")[
   #two-col(
     [
-      An interpreter executes a program representation while the program runs.
+      An interpreter *executes* a program representation while the program runs.
 
-      This supports interactive experimentation and allows the runtime to inspect the current execution state.
+      This supports *interactive* experimentation and allows the runtime to inspect the current execution state.
 
       The interpreter must be available on the machine that runs the program.
     ],
-    [#placeholder("simultaneous interpreter translating while a speaker talks", height: 8.5em)],
+    [#image("/assets/image-6.png")],
   )
 ]
 
@@ -917,22 +883,6 @@ Algorithms and Programming Languages]
   These are tendencies, not universal rules.
 ]
 
-#slide(title: "Real Implementations Combine Strategies")[
-  The categories describe execution strategies rather than permanent properties of a language.
-
-  #v(0.5em)
-  #simple-table(
-    (1fr, 2.8fr),
-    (
-      [*Implementation*], [*Typical path*],
-      [C compiler], [Source code becomes native machine code],
-      [Java virtual machine], [Source becomes bytecode, then the virtual machine interprets or compiles it],
-      [Browser JavaScript engine], [The engine interprets code and compiles frequently used parts],
-      [CPython], [Python source becomes bytecode, then the Python virtual machine executes it],
-    ),
-  )
-]
-
 #slide(title: "Program Building Blocks")[
   #set text(size: 0.88em)
   #simple-table(
@@ -949,76 +899,28 @@ Algorithms and Programming Languages]
 ]
 
 #slide(title: "Control Flow Diagrams")[
-  #placeholder("three small flowcharts: sequence, if/else selection, and loop with a condition", height: 9em)
-
-  A flowchart makes execution order visible. Each decision needs a condition with a true or false result. Each loop needs a path that eventually stops.
-]
-
-#slide(title: "Algorithm Design Check")[
-  #activity("5 minutes")[
-    Return to the automation candidate from the beginning.
-
-    + Divide it into four to seven ordered steps
-    + Add one explicit decision
-    + Add one repeated action
-    + State a stopping condition
-    + Identify one input that should produce an error
-  ]
-]
-
-#slide(title: "Bridge to Python")[
-  The classroom block established the complete path:
-
-  #align(center)[*problem · algorithm · source code · runtime · operating system · hardware · physical state*]
-
-  #v(0.8em)
-  In the laboratory, we move in the other direction. We start with a problem, write Python source code, execute it, inspect the state, and correct the result.
+  #two-col(
+    [ 
+      A flowchart makes execution order visible. Each decision needs a condition with a true or false result. Each loop needs a path that eventually stops.
+    ],[
+      #image("/assets/image-4.png")
+    ])
 ]
 
 // =============================================================================
 // LAB BLOCK
 // =============================================================================
 
-#focus-slide[Laboratory Block\
-Python Fundamentals]
-
-#slide(title: "Laboratory Plan")[
-  #set text(size: 0.88em)
-  #simple-table(
-    (1.1fr, 2.3fr, 1.15fr),
-    (
-      [*Time*], [*Topic*], [*Mode*],
-      [00:00–00:20], [Ways to run Python and first program], [Demo + setup],
-      [00:20–00:55], [Values, variables, types, operators, strings], [Demo + exercise],
-      [00:55–01:25], [Execution flow and conditions], [Demo + exercise],
-      [01:25–01:35], [Break], [10 minutes],
-      [01:35–02:05], [Loops], [Demo + exercise],
-      [02:05–02:30], [Collections], [Demo + practice],
-      [02:30–02:40], [Functions], [Demo],
-      [02:40–03:00], [Final exercise and recap], [Work + debrief],
-    ),
-  )
-]
+#focus-slide[Python Fundamentals]
 
 #slide(title: "Why Python")[
-  #two-col(
-    [
-      Python offers:
-      - readable syntax
-      - immediate interactive feedback
-      - libraries for data, automation, science, web systems, and machine learning
-      - the same language for small scripts and large projects
-    ],
-    [
-      In this laboratory, Python lets us focus on the concepts:
-      - values and state
-      - decisions
-      - repetition
-      - reusable procedures
 
-      The syntax remains visible, but it does not dominate the lesson.
-    ],
-  )
+      Python offers:
+      - *readable* syntax
+      - *immediate* interactive feedback
+      - *libraries* for data, automation, science, web systems, and machine learning
+      - the *same language* for small scripts and large projects
+
 ]
 
 #slide(title: "Three Ways to Run Python")[
@@ -1033,8 +935,6 @@ Python Fundamentals]
     ),
   )
 
-  #v(0.5em)
-  We will use a notebook for exercises, while also seeing how the same code works in a script.
 ]
 
 #slide(title: "The Python REPL")[
@@ -1072,18 +972,12 @@ Python Fundamentals]
 
 // Source: https://github.com/phyelds/phyelds, accessed 2026-09-25.
 #slide(title: "A Real Python Project")[
-  #two-col(
-    [
+
       A larger program is divided across files and directories:
       - source modules
       - tests
       - documentation
       - configuration and dependency metadata
-
-      Phyelds is a Python toolkit for building and experimenting with decentralized adaptive systems.
-    ],
-    [#placeholder("screenshot of the phyelds/phyelds GitHub repository, highlighting README, src, tests, and pyproject.toml", height: 9em)],
-  )
 
   #source-note[#link("https://github.com/phyelds/phyelds")[github.com/phyelds/phyelds]]
 ]
@@ -1146,7 +1040,7 @@ Python Fundamentals]
 // LAB PART 1: VALUES, VARIABLES, TYPES, OPERATORS, STRINGS
 // ----------------------------------------------------------------------------
 
-#focus-slide[Lab 1\
+#focus-slide[
 Values and Variables]
 
 #slide(title: "Values and Expressions")[
@@ -1222,7 +1116,7 @@ Values and Variables]
     ),
   )
 
-  Both programs work, but after five minutes nobody — *not even Ramzi* —
+  Both programs work, but after five minutes nobody (*not even Ramzi*)
   remembers what `ramzi1`, `ramzi2`, and `ramzi3` mean.
 
   #align(center)[
@@ -1251,7 +1145,7 @@ Values and Variables]
 #slide(title: "Strings and Input")[
   #two-col(
     [
-      A string stores Unicode text.
+      A string stores text.
 
       ```python
       product = "  wireless sensor  "
@@ -1274,40 +1168,40 @@ Values and Variables]
   )
 ]
 
-#slide(title: "Exercise 1: Order Total")[
-  #activity("12 minutes")[
-    Create variables for:
-    - a product name
-    - unit price
-    - quantity
-    - discount rate
+// #slide(title: "Exercise 1: Order Total")[
+//   #activity("12 minutes")[
+//     Create variables for:
+//     - a product name
+//     - unit price
+//     - quantity
+//     - discount rate
 
-    Calculate the subtotal and discounted total. Print a sentence such as:
+//     Calculate the subtotal and discounted total. Print a sentence such as:
 
-    ```text
-    12 Wireless Sensors: €538.92
-    ```
+//     ```text
+//     12 Wireless Sensors: €538.92
+//     ```
 
-    Inspect at least two values with `type()`. Then change the inputs and run the cell again.
-  ]
-]
+//     Inspect at least two values with `type()`. Then change the inputs and run the cell again.
+//   ]
+// ]
 
-#slide(title: "Exercise 1: Solution")[
-  #solution[
-    ```python
-    product = "wireless sensor"
-    unit_price = 49.90
-    quantity = 12
-    discount_rate = 0.10
+// #slide(title: "Exercise 1: Solution")[
+//   #solution[
+//     ```python
+//     product = "wireless sensor"
+//     unit_price = 49.90
+//     quantity = 12
+//     discount_rate = 0.10
 
-    subtotal = unit_price * quantity
-    total = subtotal * (1 - discount_rate)
+//     subtotal = unit_price * quantity
+//     total = subtotal * (1 - discount_rate)
 
-    print(f"{quantity} {product.title()}s: €{total:.2f}")
-    print(type(total))
-    ```
-  ]
-]
+//     print(f"{quantity} {product.title()}s: €{total:.2f}")
+//     print(type(total))
+//     ```
+//   ]
+// ]
 
 #slide(title: "Sequential Execution and State")[
   Python normally executes statements from top to bottom.
@@ -1330,8 +1224,7 @@ Values and Variables]
 // LAB PART 2: CONDITIONS
 // ----------------------------------------------------------------------------
 
-#focus-slide[Lab 2\
-Conditions]
+#focus-slide[Conditions]
 
 #slide(title: "Boolean Conditions")[
   Comparisons produce `True` or `False`.
@@ -1433,49 +1326,45 @@ Conditions]
   Python tests conditions from top to bottom and runs the first matching branch. The order therefore changes the result.
 ]
 
-#slide(title: "Exercise 2: Order Classification")[
-  #activity("12 minutes")[
-    Ask the user for an order amount with `input()` and convert it to `float`.
+// #slide(title: "Exercise 2: Order Classification")[
+//   #activity("12 minutes")[
+//     Ask the user for an order amount with `input()` and convert it to `float`.
 
-    Classify it as:
-    - `invalid` when the amount is zero or negative
-    - `high value` when it is at least 500
-    - `standard` otherwise
+//     Classify it as:
+//     - `invalid` when the amount is zero or negative
+//     - `high value` when it is at least 500
+//     - `standard` otherwise
 
-    Test `-10`, `0`, `499.99`, and `500`.
+//     Test `-10`, `0`, `499.99`, and `500`.
 
-    *Extension:* add a boolean `is_vip` and classify VIP orders of at least 250 as `priority`.
-  ]
-]
+//     *Extension:* add a boolean `is_vip` and classify VIP orders of at least 250 as `priority`.
+//   ]
+// ]
 
-#slide(title: "Exercise 2: Solution")[
-  #solution[
-    ```python
-    amount = float(input("Order amount: "))
+// #slide(title: "Exercise 2: Solution")[
+//   #solution[
+//     ```python
+//     amount = float(input("Order amount: "))
 
-    if amount <= 0:
-        label = "invalid"
-    elif amount >= 500:
-        label = "high value"
-    else:
-        label = "standard"
+//     if amount <= 0:
+//         label = "invalid"
+//     elif amount >= 500:
+//         label = "high value"
+//     else:
+//         label = "standard"
 
-    print(f"Classification: {label}")
-    ```
-  ]
+//     print(f"Classification: {label}")
+//     ```
+//   ]
 
-  Boundary values deserve explicit tests because they expose incorrect comparison operators.
-]
-
-#focus-slide[Break\
-10 minutes]
+//   Boundary values deserve explicit tests because they expose incorrect comparison operators.
+// ]
 
 // ----------------------------------------------------------------------------
 // LAB PART 3: LOOPS
 // ----------------------------------------------------------------------------
 
-#focus-slide[Lab 3\
-Loops]
+#focus-slide[Loops]
 
 #slide(title: "Lists and For Loops")[
   A list stores an ordered collection of values.
@@ -1533,53 +1422,52 @@ Loops]
   )
 ]
 
-#slide(title: "Exercise 3: Order Summary")[
-  #activity("15 minutes")[
-    Starting from:
+// #slide(title: "Exercise 3: Order Summary")[
+//   #activity("15 minutes")[
+//     Starting from:
 
-    ```python
-    amounts = [120.0, 75.5, 630.0, -5.0, 240.0]
-    ```
+//     ```python
+//     amounts = [120.0, 75.5, 630.0, -5.0, 240.0]
+//     ```
 
-    Use a loop to calculate:
-    - the total of positive amounts
-    - the number of valid amounts
-    - the number of amounts at least 500
-    - the mean of valid amounts
+//     Use a loop to calculate:
+//     - the total of positive amounts
+//     - the number of valid amounts
+//     - the number of amounts at least 500
+//     - the mean of valid amounts
 
-    Ignore zero and negative values. Print a readable summary.
-  ]
-]
+//     Ignore zero and negative values. Print a readable summary.
+//   ]
+// ]
 
-#slide(title: "Exercise 3: Solution")[
-  #set text(size: 0.84em)
-  #solution[
-    ```python
-    amounts = [120.0, 75.5, 630.0, -5.0, 240.0]
-    total = 0
-    valid_count = 0
-    high_count = 0
+// #slide(title: "Exercise 3: Solution")[
+//   #set text(size: 0.84em)
+//   #solution[
+//     ```python
+//     amounts = [120.0, 75.5, 630.0, -5.0, 240.0]
+//     total = 0
+//     valid_count = 0
+//     high_count = 0
 
-    for amount in amounts:
-        if amount > 0:
-            total = total + amount
-            valid_count = valid_count + 1
-            if amount >= 500:
-                high_count = high_count + 1
+//     for amount in amounts:
+//         if amount > 0:
+//             total = total + amount
+//             valid_count = valid_count + 1
+//             if amount >= 500:
+//                 high_count = high_count + 1
 
-    mean = total / valid_count
-    print(f"Total: €{total:.2f}, mean: €{mean:.2f}")
-    print(f"High-value orders: {high_count}")
-    ```
-  ]
-]
+//     mean = total / valid_count
+//     print(f"Total: €{total:.2f}, mean: €{mean:.2f}")
+//     print(f"High-value orders: {high_count}")
+//     ```
+//   ]
+// ]
 
 // ----------------------------------------------------------------------------
 // LAB PART 4: COLLECTIONS
 // ----------------------------------------------------------------------------
 
-#focus-slide[Lab 4\
-Collections]
+#focus-slide[Collections]
 
 #slide(title: "Lists")[
   Lists are ordered, mutable, and allow duplicate values.
@@ -1628,49 +1516,48 @@ Collections]
   A dictionary groups fields that describe one entity. A list of dictionaries can represent several records.
 ]
 
-#slide(title: "Collection Practice")[
-  #activity("8 minutes")[
-    Build a `summary` dictionary from Exercise 3 with these keys:
+// #slide(title: "Collection Practice")[
+//   #activity("8 minutes")[
+//     Build a `summary` dictionary from Exercise 3 with these keys:
 
-    ```text
-    total, valid_count, high_count, mean
-    ```
+//     ```text
+//     total, valid_count, high_count, mean
+//     ```
 
-    Print the mean using the dictionary. Then create a set from:
+//     Print the mean using the dictionary. Then create a set from:
 
-    ```python
-    labels = ["standard", "high value", "standard"]
-    ```
+//     ```python
+//     labels = ["standard", "high value", "standard"]
+//     ```
 
-    How many unique labels remain?
-  ]
-]
+//     How many unique labels remain?
+//   ]
+// ]
 
-#slide(title: "Collection Practice: Solution")[
-  #solution[
-    ```python
-    summary = {
-        "total": total,
-        "valid_count": valid_count,
-        "high_count": high_count,
-        "mean": mean,
-    }
+// #slide(title: "Collection Practice: Solution")[
+//   #solution[
+//     ```python
+//     summary = {
+//         "total": total,
+//         "valid_count": valid_count,
+//         "high_count": high_count,
+//         "mean": mean,
+//     }
 
-    print(f"Mean: €{summary['mean']:.2f}")
+//     print(f"Mean: €{summary['mean']:.2f}")
 
-    labels = ["standard", "high value", "standard"]
-    unique_labels = set(labels)
-    print(len(unique_labels))  # 2
-    ```
-  ]
-]
+//     labels = ["standard", "high value", "standard"]
+//     unique_labels = set(labels)
+//     print(len(unique_labels))  # 2
+//     ```
+//   ]
+// ]
 
 // ----------------------------------------------------------------------------
 // LAB PART 5: FUNCTIONS
 // ----------------------------------------------------------------------------
 
-#focus-slide[Lab 5\
-Functions]
+#focus-slide[Functions]
 
 #slide(title: "Defining and Calling a Function")[
   ```python
@@ -1729,85 +1616,85 @@ Functions]
   )
 ]
 
-#slide(title: "Final Exercise: Summarize Orders")[
-  #activity("18 minutes")[
-    Write a function:
+// #slide(title: "Final Exercise: Summarize Orders")[
+//   #activity("18 minutes")[
+//     Write a function:
 
-    ```python
-    summarize(amounts, threshold)
-    ```
+//     ```python
+//     summarize(amounts, threshold)
+//     ```
 
-    It must ignore non-positive amounts and return a dictionary containing:
-    - `total`
-    - `valid_count`
-    - `mean`
-    - `high_count`
+//     It must ignore non-positive amounts and return a dictionary containing:
+//     - `total`
+//     - `valid_count`
+//     - `mean`
+//     - `high_count`
 
-    When no valid amounts exist, use `None` for the mean. Test at least two lists, including one with no valid values.
-  ]
-]
+//     When no valid amounts exist, use `None` for the mean. Test at least two lists, including one with no valid values.
+//   ]
+// ]
 
-#slide(title: "Final Exercise: Core Logic")[
-  #set text(size: 0.82em)
-  #solution[
-    ```python
-    def summarize(amounts, threshold):
-        total = 0
-        valid_count = 0
-        high_count = 0
+// #slide(title: "Final Exercise: Core Logic")[
+//   #set text(size: 0.82em)
+//   #solution[
+//     ```python
+//     def summarize(amounts, threshold):
+//         total = 0
+//         valid_count = 0
+//         high_count = 0
 
-        for amount in amounts:
-            if amount > 0:
-                total = total + amount
-                valid_count = valid_count + 1
-                if amount >= threshold:
-                    high_count = high_count + 1
+//         for amount in amounts:
+//             if amount > 0:
+//                 total = total + amount
+//                 valid_count = valid_count + 1
+//                 if amount >= threshold:
+//                     high_count = high_count + 1
 
-        if valid_count == 0:
-            mean = None
-        else:
-            mean = total / valid_count
-    ```
-  ]
-]
+//         if valid_count == 0:
+//             mean = None
+//         else:
+//             mean = total / valid_count
+//     ```
+//   ]
+// ]
 
-#slide(title: "Final Exercise: Result and Tests")[
-  #set text(size: 0.84em)
-  #solution[
-    Complete the function with:
+// #slide(title: "Final Exercise: Result and Tests")[
+//   #set text(size: 0.84em)
+//   #solution[
+//     Complete the function with:
 
-    ```python
-        return {
-            "total": total,
-            "valid_count": valid_count,
-            "mean": mean,
-            "high_count": high_count,
-        }
-    ```
+//     ```python
+//         return {
+//             "total": total,
+//             "valid_count": valid_count,
+//             "mean": mean,
+//             "high_count": high_count,
+//         }
+//     ```
 
-    Then test it:
+//     Then test it:
 
-    ```python
-    amounts = [120.0, 75.5, 630.0, -5.0, 240.0]
-    result = summarize(amounts, 500)
-    print(result)
+//     ```python
+//     amounts = [120.0, 75.5, 630.0, -5.0, 240.0]
+//     result = summarize(amounts, 500)
+//     print(result)
 
-    empty_result = summarize([-4.0, 0.0], 500)
-    print(empty_result)
-    ```
-  ]
-]
+//     empty_result = summarize([-4.0, 0.0], 500)
+//     print(empty_result)
+//     ```
+//   ]
+// ]
 
-#slide(title: "Laboratory Recap")[
-  The program now combines the main building blocks:
+// #slide(title: "Laboratory Recap")[
+//   The program now combines the main building blocks:
 
-  - values and names represent state
-  - expressions calculate new values
-  - conditions select a branch
-  - loops repeat work across a collection
-  - dictionaries organize a result
-  - functions package a reusable procedure
+//   - values and names represent state
+//   - expressions calculate new values
+//   - conditions select a branch
+//   - loops repeat work across a collection
+//   - dictionaries organize a result
+//   - functions package a reusable procedure
 
-  #v(0.6em)
-  #callout[The next step is practice: change the data, test boundary cases, read each error, and explain why the program behaves as it does.]
-]
+//   #v(0.6em)
+//   #callout[The next step is practice: change the data, test boundary cases, read each error, and explain why the program behaves as it does.]
+// ]
