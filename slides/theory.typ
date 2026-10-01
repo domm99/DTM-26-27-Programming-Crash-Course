@@ -139,6 +139,8 @@ Why Computers and Programming?]
       - *simulation* of alternatives
 
       They trade human effort for a precise procedure that can run at scale.
+
+      Example: Analyzing a huge amount of data 
 ]
 
 #slide(title: "A Wartime Turning Point: The Bombe")[
@@ -241,6 +243,15 @@ Why Computers and Programming?]
   ]]
 ]
 
+
+#slide(title: "Waht does that quote imply?")[
+
+
+  - As the god of this small world, you define its rules and are *responsible* for the behavior they produce
+  - Writing useful rules requires *understanding how that world works* and which operations the computer can perform
+  - The computer *follows your rules literally* and at scale, including your wrong assumptions and mistakes
+  - *Testing* lets you compare the world you created with the world you intended to create
+]
 // ----------------------------------------------------------------------------
 // PART 2: HARDWARE
 // ----------------------------------------------------------------------------
@@ -1616,6 +1627,91 @@ Values and Variables]
   )
 ]
 
+#slide(title: "Lambda Functions")[
+  A *lambda expression* creates a small anonymous function.
+
+  #align(center)[
+    `lambda parameters: expression`
+  ]
+
+  #two-col(
+    [
+      *Named function*
+
+      ```python
+      def last_character(name):
+          return name[-1]
+
+      names = ["Ada", "Grace", "Alan"]
+
+      sorted(names, key=last_character)
+      ```
+    ],
+    [
+      *Lambda function*
+
+      ```python
+      names = ["Ada", "Grace", "Alan"]
+
+      sorted(
+          names,
+          key=lambda name: name[-1]
+      )
+      ```
+    ],
+  )
+
+  Both versions produce:
+
+  ```python
+  ["Ada", "Grace", "Alan"]
+  ```
+  - A lambda can contain only one expression.
+  - Python returns the result of that expression automatically.
+  - Lambdas are useful when a short function is needed only once, often as an argument to another function.
+]
+
+#slide(title: "Recursive Functions")[
+  A *recursive function* solves a problem by calling itself on a smaller
+  version of the same problem.
+
+  #two-col(
+    [
+      *Factorial*
+
+      For a non-negative integer $n$:
+
+      $ n! = n times (n - 1) times dots.c times 1 $
+
+      ```python
+      def factorial(n):
+          if n == 0:
+              return 1
+
+          return n * factorial(n - 1)
+      ```
+    ],
+    [
+      *Executing `factorial(4)`*
+
+      ```text
+      factorial(4)
+      = 4 * factorial(3)
+      = 4 * 3 * factorial(2)
+      = 4 * 3 * 2 * factorial(1)
+      = 4 * 3 * 2 * 1 * factorial(0)
+      = 4 * 3 * 2 * 1 * 1
+      = 24
+      ```
+    ],
+  )
+
+  #v(1.8em)
+  - `n == 0` is the *base case*: it stops the recursion.
+  - `factorial(n - 1)` is the *recursive case*: each call moves closer to the base case.
+  - Without a reachable base case, the function continues calling itself until Python raises a `RecursionError`.
+
+]
 // #slide(title: "Final Exercise: Summarize Orders")[
 //   #activity("18 minutes")[
 //     Write a function:
