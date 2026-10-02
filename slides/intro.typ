@@ -68,7 +68,7 @@
   - #alert[Lesson 01]: Intro to Computer Architectures, Operating Systems and Programming Languages
   - #alert[Lesson 02]: Lab 1 on Programming in Python
   - #alert[Lesson 03]: Lab 2 on Programming in Python
-  - #alert[Lesson 03]: Lab 3 on Programming in Python
+  - #alert[Lesson 04]: Lab 3 on Programming in Python
 ]
 
 #slide(title: "When and where?")[

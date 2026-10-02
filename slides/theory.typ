@@ -1108,7 +1108,7 @@ Values and Variables]
   #simple-table(
     (1fr, 1fr),
     (
-      [**Ramzi's version**], [**A readable version**],
+      [Ramzi's version], [A readable version],
 
       [
         ```python
@@ -1261,12 +1261,12 @@ Values and Variables]
     gutter: 1em,
 
     [
-      #align(center)[**AND**]
+      #align(center)[AND]
 
       #simple-table(
         (1fr, 1fr, 1.3fr),
         (
-          [**A**], [**B**], [**A and B**],
+          [A], [B], [A and B],
           [`F`], [`F`], [`F`],
           [`F`], [`T`],  [`F`],
           [`T`],  [`F`], [`F`],
@@ -1276,12 +1276,12 @@ Values and Variables]
     ],
 
     [
-      #align(center)[**OR**]
+      #align(center)[OR]
 
       #simple-table(
         (1fr, 1fr, 1.3fr),
         (
-          [**A**], [**B**], [**A or B**],
+          [A], [B], [A or B],
           [`F`], [`F`], [`F`],
           [`F`], [`T`],  [`T`],
           [`T`],  [`F`], [`T`],
@@ -1291,12 +1291,12 @@ Values and Variables]
     ],
 
     [
-      #align(center)[**NOT**]
+      #align(center)[NOT]
 
       #simple-table(
         (1fr, 1fr),
         (
-          [**A**], [**not A**],
+          [A], [not A],
           [`F`], [`T`],
           [`T`],  [`F`],
         ),
