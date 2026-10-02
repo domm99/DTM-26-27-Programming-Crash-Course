@@ -151,9 +151,9 @@ Why Computers and Programming?]
   #v(1.5em)
     #two-col(
   [
-    #figure(image("/assets/image.png", width: 100%))
+    #figure(image("images/image.png", width: 100%))
   ],[
-    #figure(image("/assets/image-1.png", width: 100%))
+    #figure(image("images/image-1.png", width: 100%))
   ])
   #v(3.5em)
 
@@ -812,7 +812,7 @@ Algorithms and Programming Languages]
 
 #slide(title: "Levels of Abstraction")[
 
-  #figure(image("/assets/image-2.png", width: 55%))
+  #figure(image("images/image-2.png", width: 55%))
 
   Higher-level languages hide more machine detail and offer concepts closer to the problem. Lower-level languages expose more control over hardware and memory.
 ]
@@ -849,7 +849,7 @@ Algorithms and Programming Languages]
 ]
 
 #slide(title: "Two Steps of Abstraction")[
-  #figure(image("/assets/image-3.png", width: 90%))
+  #figure(image("images/image-3.png", width: 90%))
 ]
 
 
@@ -862,7 +862,7 @@ Algorithms and Programming Languages]
 
       Translation happens *once per build*, while the result may run many times.
     ],
-    [#image("/assets/image-5.png")],
+    [#image("images/image-5.png")],
   )
 ]
 
@@ -875,7 +875,7 @@ Algorithms and Programming Languages]
 
       The interpreter must be available on the machine that runs the program.
     ],
-    [#image("/assets/image-6.png")],
+    [#image("images/image-6.png")],
   )
 ]
 
@@ -914,7 +914,7 @@ Algorithms and Programming Languages]
     [ 
       A flowchart makes execution order visible. Each decision needs a condition with a true or false result. Each loop needs a path that eventually stops.
     ],[
-      #image("/assets/image-4.png")
+      #image("images/image-4.png")
     ])
 ]
 
